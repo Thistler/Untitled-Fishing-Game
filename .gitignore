@@ -7,6 +7,7 @@ UserSettings/
 # VS / Monodevelop Generated
 ExportedObj/
 obj/
+.vs
 *.svd
 *.userprefs
 /*.csproj
