@@ -8,6 +8,11 @@ public class TopDownCharacterMover : MonoBehaviour
     private InputHandler _input;
     private float _startingYPos;
 
+    // This may have to be tweaked when we animate the sprites
+    public Sprite sideSprite;
+    public Sprite frontSprite;
+    public Sprite backSprite;
+
     [SerializeField]
     private float moveSpeed;
 
@@ -27,6 +32,27 @@ public class TopDownCharacterMover : MonoBehaviour
         MoveTowardTarget(targetVector);
 
         // Update sprite
+        // TODO: Might refactor this to only update values when needed
+        if(targetVector.z > 0.1)
+        {
+            GetComponent<SpriteRenderer>().sprite = backSprite;
+            GetComponent<SpriteRenderer>().flipX = false;
+        }
+        if(targetVector.z < -0.1)
+        {
+            GetComponent<SpriteRenderer>().sprite = frontSprite;
+            GetComponent<SpriteRenderer>().flipX = false;
+        }
+        if(targetVector.x > 0.2)
+        {
+            GetComponent<SpriteRenderer>().sprite = sideSprite;
+            GetComponent<SpriteRenderer>().flipX = false;
+        }
+        if (targetVector.x < -0.2)
+        {
+            GetComponent<SpriteRenderer>().sprite = sideSprite;
+            GetComponent<SpriteRenderer>().flipX = true;
+        }
     }
 
     private void MoveTowardTarget(Vector3 targetVector)

@@ -5897,6 +5897,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54c07ed14e3b2a44ca1ae72c3c316ad3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sideSprite: {fileID: -839001312, guid: 3700c67f1978d174a9d4b34b50872b68, type: 3}
+  frontSprite: {fileID: 700360911, guid: 3700c67f1978d174a9d4b34b50872b68, type: 3}
+  backSprite: {fileID: 239661355, guid: 3700c67f1978d174a9d4b34b50872b68, type: 3}
   moveSpeed: 0.01
 --- !u!114 &2073737892
 MonoBehaviour:
