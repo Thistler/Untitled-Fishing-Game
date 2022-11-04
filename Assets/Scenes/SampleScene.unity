@@ -639,6 +639,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Controller: {fileID: 935251722}
   Speed: 3
+  frontSprite: {fileID: 700360911, guid: 3700c67f1978d174a9d4b34b50872b68, type: 3}
+  backSprite: {fileID: 239661355, guid: 3700c67f1978d174a9d4b34b50872b68, type: 3}
+  sideSprite: {fileID: -839001312, guid: 3700c67f1978d174a9d4b34b50872b68, type: 3}
 --- !u!143 &935251722
 CharacterController:
   m_ObjectHideFlags: 0
