@@ -58,7 +58,7 @@ public class CharacterControllerMovement : MonoBehaviour
                 }
 
                 newBobber = (GameObject)Instantiate(Bobber, BobberStartPoint.position, new Quaternion(0f, 0f, 0f, 0f));
-                newBobber.GetComponent<Rigidbody>().AddForce(BobberStartPoint.forward * 700f);
+                newBobber.GetComponent<Rigidbody>().AddForce(BobberStartPoint.forward * 100f);
             }
         }
         if (Fishing)
