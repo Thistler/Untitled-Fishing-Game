@@ -21,20 +21,22 @@ public class BobberCollider : MonoBehaviour
     {
         if(other.gameObject.tag == "Water" || other.gameObject.tag == "Ground")
         {
+            // Stop further movement of bobber
             BobberRigidbody.velocity = Vector3.zero;
             BobberRigidbody.useGravity = false;
+            // Prevent bobber from detecting a second collision
+            BobberRigidbody.detectCollisions = false;
 
-            if (other.gameObject.tag == "Water")
-            {
-                BobberSprite.sprite = waterSprite;
-                // TODO: Begin the fish
-            }
-            else if (other.gameObject.tag == "Ground")
+            if (other.gameObject.tag == "Ground")
             {
                 BobberSprite.sprite = groundSprite;
                 // TODO: No longer fishing
             }
+            else if (other.gameObject.tag == "Water")
+            {
+                BobberSprite.sprite = waterSprite;
+                // TODO: Begin the fish
+            }
         }
-        
     }
 }
