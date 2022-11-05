@@ -8,6 +8,8 @@ public class BobberCollider : MonoBehaviour
     [SerializeField] private Sprite waterSprite;
     [SerializeField] private Sprite groundSprite;
 
+    private PlayerController PlayerController;
+
     private Rigidbody BobberRigidbody;
     private SpriteRenderer BobberSprite;
 
@@ -15,6 +17,7 @@ public class BobberCollider : MonoBehaviour
     {
         BobberRigidbody = GetComponent<Rigidbody>();
         BobberSprite = GetComponentInChildren<SpriteRenderer>();
+        PlayerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -30,7 +33,7 @@ public class BobberCollider : MonoBehaviour
             if (other.gameObject.tag == "Ground")
             {
                 BobberSprite.sprite = groundSprite;
-                // TODO: No longer fishing
+                PlayerController.ResetBobberFromGround();
             }
             else if (other.gameObject.tag == "Water")
             {
