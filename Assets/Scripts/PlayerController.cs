@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static StaticData;
 
 public class PlayerController : MonoBehaviour
 {
@@ -118,8 +119,7 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.Q))
         {
-            PlayerState = 0;
-            if (newBobber) Destroy(newBobber, 0);
+            ResetPlayerAndBobber();
         }
     }
 
@@ -133,6 +133,83 @@ public class PlayerController : MonoBehaviour
     private IEnumerator BobberDelay()
     {
         yield return new WaitForSecondsRealtime(1f);
+        ResetPlayerAndBobber();
+    }
+
+    public void StartWaitingForBite()
+    {
+        PlayerState = 2;
+        StartCoroutine("AwaitFishBite");
+    }
+
+    private IEnumerator AwaitFishBite()
+    {
+        // TODO: Temp
+        string currentBait = "worm";
+        string currentTile = "cabin_pond_shallow";
+        string currentSeason = "spring";
+        int currentHour = 10;
+        //
+
+        int totalDropWeights = 0;
+
+        // Get fish available for this tile
+        Debug.Log("Getting drop rates for cast");
+        Dictionary<string, int> fishInTile = new Dictionary<string, int>();
+        foreach (FishSpecies species in GameControl.Control.CurrentAvailableFish)
+        {
+            if(species.baits != null || species.baits.ContainsKey(currentBait))
+            {
+                foreach(FishTileData tile in species.tiles)
+                {
+                    if(tile.tilename == currentTile)
+                    {
+                        int dropweight = tile.droprate;
+                        if (species.seasons != null && species.seasons.ContainsKey(currentSeason)) dropweight += species.seasons[currentSeason];
+                        if (species.baits != null && species.baits.ContainsKey(currentBait)) dropweight += species.baits[currentBait];
+                        if(species.hours != null && species.hours.ContainsKey(currentHour)) dropweight += species.hours[currentHour];
+                        fishInTile.Add(species.species, dropweight);
+                        totalDropWeights += dropweight;
+                        Debug.Log("Added " + species.species + " to fish list with drop rate of " + dropweight + ". Total dropweight is now " + totalDropWeights);
+                    }
+                }
+            }
+        }
+
+        for (int i = 0; i < 30; i++)
+        {
+            yield return new WaitForSecondsRealtime(2);
+            Debug.Log(i*2 + " seconds have passed");
+            int fishRoll = Random.Range(0, totalDropWeights + 1000); // TODO: This number will be calculated somehow later
+            foreach (KeyValuePair<string, int> fish in fishInTile)
+            {
+                fishRoll -= fish.Value;
+                if(fishRoll < 0)
+                {
+                    BeginReeling(fish.Key);
+                    // TODO: Calculate fish weight
+                    yield break;
+                }
+            }
+        }
+        BeginReeling("RoughFish");
+    }
+
+    private void BeginReeling(string fish)
+    {
+        Debug.Log("Reeling " + fish);
+        PlayerState = 3;
+        LandFish(fish);
+    }
+
+    private void LandFish(string fish)
+    {
+        Debug.Log(fish + " is caught");
+        ResetPlayerAndBobber();
+    }
+
+    private void ResetPlayerAndBobber()
+    {
         PlayerState = 0;
         if (newBobber)
         {

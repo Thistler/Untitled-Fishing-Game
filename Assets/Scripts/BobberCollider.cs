@@ -38,7 +38,7 @@ public class BobberCollider : MonoBehaviour
             else if (other.gameObject.tag == "Water")
             {
                 BobberSprite.sprite = waterSprite;
-                // TODO: Begin the fish
+                PlayerController.StartWaitingForBite();
             }
         }
     }
