@@ -147,7 +147,6 @@ public class PlayerController : MonoBehaviour
         // TODO: Temp
         string currentBait = "worm";
         string currentTile = "cabin_pond_shallow";
-        string currentSeason = "spring";
         int currentHour = 10;
         //
 
@@ -165,7 +164,7 @@ public class PlayerController : MonoBehaviour
                     if(tile.tilename == currentTile)
                     {
                         int dropweight = tile.droprate;
-                        if (species.seasons != null && species.seasons.ContainsKey(currentSeason)) dropweight += species.seasons[currentSeason];
+                        if (species.seasons != null && species.seasons.ContainsKey(GameControl.Control.CurrentSeason)) dropweight += species.seasons[GameControl.Control.CurrentSeason];
                         if (species.baits != null && species.baits.ContainsKey(currentBait)) dropweight += species.baits[currentBait];
                         if(species.hours != null && species.hours.ContainsKey(currentHour)) dropweight += species.hours[currentHour];
                         fishInTile.Add(species.species, dropweight);
@@ -192,7 +191,7 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
-        BeginReeling("RoughFish");
+        BeginReeling("Rough Fish");
     }
 
     private void BeginReeling(string fish)
