@@ -39,6 +39,7 @@ public class BobberCollider : MonoBehaviour
             {
                 BobberSprite.sprite = waterSprite;
                 PlayerController.StartWaitingForBite();
+                Debug.Log(GameControl.Control.SelectedBait);
                 Debug.Log(MapManager.StaticMapManager.GetTileType(other.gameObject));
             }
         }

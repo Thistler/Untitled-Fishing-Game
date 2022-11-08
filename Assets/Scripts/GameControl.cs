@@ -17,6 +17,7 @@ public class GameControl : MonoBehaviour
 
     // Inventory
     public Dictionary<string, int> BaitInventory = new Dictionary<string, int>();
+    public string SelectedBait;
 
     public System.DateTime TimeOfFirstSave;
     public System.DateTime TimeOfLastSave;
@@ -62,6 +63,7 @@ public class GameControl : MonoBehaviour
 
         // Inventory
         data.BaitInventory = BaitInventory;
+        data.SelectedBait = SelectedBait;
 
         // Time Since Last Save
         data.timeOfFirstSave = TimeOfFirstSave;
@@ -103,7 +105,9 @@ public class GameControl : MonoBehaviour
             PlayerXp = data.PlayerXp;
 
             // Inventory
-            BaitInventory = data.BaitInventory;
+            //BaitInventory = data.BaitInventory; TODO: Temp
+            BaitInventory = new Dictionary<string, int>() { { "worm", 10 }, { "grub", 12 } };
+            SelectedBait = data.SelectedBait ?? "worm"; // TODO: Probably temp
         }
         else
         {
@@ -139,10 +143,14 @@ public class GameControl : MonoBehaviour
             SetCurrentWeather();
         }
         Debug.Log("Current weather is " + CurrentWeather);
-        UiControl.uiControl.UpdateWeatherSprite();
+        
 
         // Set fish list
         SetCurrentFishList();
+
+        // Set up Ui
+        UiControl.uiControl.BuildBaitInventory();
+        UiControl.uiControl.UpdateWeatherSprite();
     }
 
     // TODO: Make sure this is called every hour
@@ -275,6 +283,7 @@ class PlayerData
 
     // Inventory
     public Dictionary<string, int> BaitInventory = new Dictionary<string, int>();
+    public string SelectedBait;
 
     // Times
     public DateTime timeOfFirstSave;

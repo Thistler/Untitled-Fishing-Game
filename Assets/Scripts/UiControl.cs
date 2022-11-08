@@ -17,6 +17,9 @@ public class UiControl : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI UiClock;
 
+    [SerializeField] private GameObject BaitSwitchPanel;
+    [SerializeField] private GameObject BaitItem;
+
     private GameObject UiImage;
 
     void Awake()
@@ -54,6 +57,33 @@ public class UiControl : MonoBehaviour
 
             // Update fish list accordingly
             GameControl.Control.SetCurrentFishList();
+        }
+
+        if(Input.GetKey(KeyCode.Tab))
+        {
+            BaitSwitchPanel.gameObject.SetActive(true);
+        }
+        else
+        {
+            BaitSwitchPanel.gameObject.SetActive(false);
+        }
+    }
+
+    public void BuildBaitInventory()
+    {
+        GridLayoutGroup baitGrid = BaitSwitchPanel.GetComponentInChildren<GridLayoutGroup>();
+        // Clear existing panels
+        foreach(Transform child in baitGrid.transform)
+        {
+            GameObject.Destroy(child.gameObject);
+        }
+        foreach (KeyValuePair<string, int> bait in GameControl.Control.BaitInventory)
+        {
+            GameObject newBaitBtn = Instantiate(BaitItem);
+            newBaitBtn.transform.Find("NameText").GetComponent<TextMeshProUGUI>().text = bait.Key;
+            newBaitBtn.transform.Find("CountText").GetComponent<TextMeshProUGUI>().text = bait.Value.ToString();
+            newBaitBtn.transform.SetParent(baitGrid.transform);
+            newBaitBtn.GetComponent<Button>().onClick.AddListener(delegate () { GameControl.Control.SelectedBait = bait.Key; });
         }
     }
 

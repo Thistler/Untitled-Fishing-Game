@@ -43,7 +43,7 @@ public class PlayerController : MonoBehaviour
             case 0:
                 MovePlayer();
 
-                if(Input.GetKey(KeyCode.Mouse0))
+                if(Input.GetKey(KeyCode.Mouse0) && !Input.GetKey(KeyCode.Tab))
                 {
                     // Begin our cast
                     PlayerState = 1;
@@ -145,9 +145,7 @@ public class PlayerController : MonoBehaviour
     private IEnumerator AwaitFishBite()
     {
         // TODO: Temp
-        string currentBait = "worm";
         string currentTile = "cabin_pond_shallow";
-        int currentHour = 10;
         //
 
         int totalDropWeights = 0;
@@ -157,7 +155,7 @@ public class PlayerController : MonoBehaviour
         Dictionary<string, int> fishInTile = new Dictionary<string, int>();
         foreach (FishSpecies species in GameControl.Control.CurrentAvailableFish)
         {
-            if(species.baits != null || species.baits.ContainsKey(currentBait))
+            if(species.baits != null || species.baits.ContainsKey(GameControl.Control.SelectedBait))
             {
                 foreach(FishTileData tile in species.tiles)
                 {
@@ -165,8 +163,8 @@ public class PlayerController : MonoBehaviour
                     {
                         int dropweight = tile.droprate;
                         if (species.seasons != null && species.seasons.ContainsKey(GameControl.Control.CurrentSeason)) dropweight += species.seasons[GameControl.Control.CurrentSeason];
-                        if (species.baits != null && species.baits.ContainsKey(currentBait)) dropweight += species.baits[currentBait];
-                        if(species.hours != null && species.hours.ContainsKey(currentHour)) dropweight += species.hours[currentHour];
+                        if (species.baits != null && species.baits.ContainsKey(GameControl.Control.SelectedBait)) dropweight += species.baits[GameControl.Control.SelectedBait];
+                        if(species.hours != null && species.hours.ContainsKey(GameControl.Control.CurrentHour)) dropweight += species.hours[GameControl.Control.CurrentHour];
                         fishInTile.Add(species.species, dropweight);
                         totalDropWeights += dropweight;
                         Debug.Log("Added " + species.species + " to fish list with drop rate of " + dropweight + ". Total dropweight is now " + totalDropWeights);

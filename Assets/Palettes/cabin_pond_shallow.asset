@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: cabin_pond_shallow
   m_EditorClassIdentifier: 
   tiles: []
-  watertype: 
+  watertype: cabin_pond_deep
