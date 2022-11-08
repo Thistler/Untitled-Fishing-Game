@@ -214,5 +214,6 @@ public class PlayerController : MonoBehaviour
         {
             Destroy(newBobber, 0);
         }
+        StopCoroutine("AwaitFishBite");
     }
 }
