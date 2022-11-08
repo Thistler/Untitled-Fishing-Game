@@ -136,17 +136,15 @@ public class PlayerController : MonoBehaviour
         ResetPlayerAndBobber();
     }
 
-    public void StartWaitingForBite()
+    public void StartWaitingForBite(string currentTile)
     {
         PlayerState = 2;
-        StartCoroutine("AwaitFishBite");
+        StartCoroutine("AwaitFishBite", currentTile);
     }
 
-    private IEnumerator AwaitFishBite()
+    private IEnumerator AwaitFishBite(string currentTile)
     {
-        // TODO: Temp
-        string currentTile = "cabin_pond_shallow";
-        //
+        Debug.Log("Cast line in " + currentTile + " with " + GameControl.Control.SelectedBait);
 
         int totalDropWeights = 0;
 
