@@ -5,6 +5,7 @@ using System.IO;
 using UnityEngine;
 using static StaticData;
 using System.Linq;
+using Random = UnityEngine.Random;
 
 public class GameControl : MonoBehaviour
 {
@@ -13,17 +14,20 @@ public class GameControl : MonoBehaviour
     // Saveable data
     // Player Stats
     public float PlayerXp;
-    
+
     // Inventory
     public Dictionary<string, int> BaitInventory = new Dictionary<string, int>();
 
     public System.DateTime TimeOfFirstSave;
     public System.DateTime TimeOfLastSave;
 
+    public string CurrentWeather;
+
     // Non saveable data
     public List<FishSpecies> CurrentAvailableFish;
 
     public string CurrentSeason;
+    public int CurrentHour;
 
     void Start()
     {
@@ -55,13 +59,16 @@ public class GameControl : MonoBehaviour
 
         // Player Data
         data.PlayerXp = PlayerXp;
-        
+
         // Inventory
         data.BaitInventory = BaitInventory;
 
         // Time Since Last Save
         data.timeOfFirstSave = TimeOfFirstSave;
         data.timeOfLastSave = currentTime;
+
+        // Weather
+        data.currentWeather = CurrentWeather;
 
         // Save and close file
         bf.Serialize(file, data);
@@ -90,13 +97,13 @@ public class GameControl : MonoBehaviour
             Debug.Log("Game file created on " + TimeOfFirstSave.Date);
             Debug.Log(timeDifference.Minutes + " minutes since last save.");
 
+            CurrentWeather = data.currentWeather ?? "clear";
+
             // Player Stats
             PlayerXp = data.PlayerXp;
-            
+
             // Inventory
             BaitInventory = data.BaitInventory;
-
-            // Calculate season
         }
         else
         {
@@ -110,22 +117,38 @@ public class GameControl : MonoBehaviour
             // Set default variables and create the save file
             TimeOfLastSave = DateTime.Now;
             CurrentSeason = "spring";
+            CurrentWeather = "clear";
             Save();
         }
 
-        SetCurrentFishList();
+        // Set time
+        CurrentHour = DateTime.Now.Hour;
+
+        // Set season
         SetCurrentSeason();
+
+        // Set current weather
+        Debug.Log("Time of last save: " + TimeOfLastSave);
+        int hoursSinceSave = (DateTime.Now - TimeOfLastSave).Hours;
+        Debug.Log("Hours since last save: " + hoursSinceSave);
+        if (hoursSinceSave > 4) hoursSinceSave = 4;
+        // Re-Roll weather an appropriate amount of times
+        // This makes weather a bit more realistic for players who reopen the game after only an hour or two
+        for (int i=0; i < hoursSinceSave; i++)
+        {
+            SetCurrentWeather();
+        }
+        Debug.Log("Current weather is " + CurrentWeather);
+        UiControl.uiControl.UpdateWeatherSprite();
+
+        // Set fish list
+        SetCurrentFishList();
     }
 
     // TODO: Make sure this is called every hour
     // Sets list of fish currently available based on current season, weather, and time of day
     public void SetCurrentFishList()
     {
-        // TODO: Temp
-        int currentHour = 10;
-        string currentWeather = "clear";
-        ////////
-
         Debug.Log("Setting fish list");
         CurrentAvailableFish = new List<FishSpecies>();
         foreach (FishSpecies species in StaticData.Static.FullFishSpeciesList)
@@ -133,8 +156,8 @@ public class GameControl : MonoBehaviour
             // If seasons, hours, or weathers is null, that means the fish is not restricted by those fields.
             // So we make sure that the field is either null or matches the current value for those fields
             if ((species.seasons == null || species.seasons.ContainsKey(CurrentSeason))
-                && (species.hours == null || species.hours.ContainsKey(currentHour))
-                && (species.weathers == null || species.weathers.ContainsKey(currentWeather))
+                && (species.hours == null || species.hours.ContainsKey(CurrentHour))
+                && (species.weathers == null || species.weathers.ContainsKey(CurrentWeather))
                 )
             {
                 CurrentAvailableFish.Add(species);
@@ -143,7 +166,6 @@ public class GameControl : MonoBehaviour
         }
     }
 
-    // TODO: Make sure this is called at midnight
     // Gets the amount of days since the game save was created, then divides by eight, and uses decimal place to calculate the time of "year"
     public void SetCurrentSeason()
     {
@@ -151,10 +173,10 @@ public class GameControl : MonoBehaviour
         DateTime currentDate = DateTime.Now;
         DateTime currentDateMidnight = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, 0, 0, 0);
 
-        double daysSinceLastSave = (currentDateMidnight - TimeOfFirstSave.Date).TotalDays;
-        Debug.Log(daysSinceLastSave + " days since file was created");
+        double daysSinceFirstSave = (currentDateMidnight - TimeOfFirstSave.Date).TotalDays;
+        Debug.Log(daysSinceFirstSave + " days since file was created");
 
-        double daysDivided = daysSinceLastSave / 8;
+        double daysDivided = daysSinceFirstSave / 8;
         double decimalOnly = daysDivided - Math.Truncate(daysDivided);
 
         Debug.Log("Days divided decimal is " + decimalOnly);
@@ -187,6 +209,62 @@ public class GameControl : MonoBehaviour
         Debug.Log("Current season is " + CurrentSeason);
         UiControl.uiControl.UpdateSeasonSprite();
     }
+
+    // Note: Make sure the season is updated BEFORE calling this method, when appropriate
+    public void SetCurrentWeather()
+    {
+        // Set the list of available weather
+        List<string> availableWeather = new List<string>();
+        switch (CurrentWeather)
+        {
+            case "clear":
+                //  Can stay the same, or switch to either cloudy or foggy, depending on season
+                availableWeather = new List<string>() { "clear", "rainy", "foggy" };
+                break;
+            case "cloudy":
+                //  Can stay the same, or switch to clear, rainy or snowy, depending on the season
+                availableWeather = new List<string>() { "clear" };
+                if (CurrentWeather == "winter") availableWeather.Add("snowy");
+                else availableWeather.Add("rainy");
+                break;
+            case "rainy":
+                //  Can stay the same, or switch to foggy or cloudy, depending on the season
+                availableWeather = new List<string>() { "rainy", "cloudy", "foggy" };
+                break;
+            case "snowy":
+                // Can stay the same, or switch to rainy, cloudy or foggy, depending on the season
+                availableWeather = new List<string>() { "cloudy", "foggy" };
+                if (CurrentWeather == "winter") availableWeather.Add("snowy");
+                else availableWeather.Add("rainy");
+                break;
+            case "stormy":
+                // can NOT stay the same, must switch to rainy
+                availableWeather = new List<string>() { "rainy" };
+                break;
+            case "foggy":
+                // Can stay the same or switch to clear, cloudy, or rainy
+                availableWeather = new List<string>() { "cloudy", "foggy" };
+                if (CurrentWeather == "winter") availableWeather.Add("snowy");
+                else availableWeather.Add("rainy");
+                break;
+        }
+
+        // TODO: Evaluate if some weathers should be weighted to occur more/less. For now, they are equal
+        int weatherRoll = Random.Range(0, availableWeather.Count);
+        foreach (string weather in availableWeather)
+        {
+            weatherRoll -= availableWeather.IndexOf(weather);
+            if (weatherRoll < 0)
+            {
+                CurrentWeather = weather;
+                break;
+            }
+        }
+
+        Debug.Log("Current weather is " + CurrentWeather);
+        UiControl.uiControl.UpdateWeatherSprite();
+        Save(); // Prevent reload hijinks
+    }
 }
 
 [System.Serializable]
@@ -201,4 +279,7 @@ class PlayerData
     // Times
     public DateTime timeOfFirstSave;
     public DateTime timeOfLastSave;
+
+    // Weather
+    public string currentWeather;
 }
