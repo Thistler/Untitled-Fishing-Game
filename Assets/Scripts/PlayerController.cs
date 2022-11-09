@@ -56,25 +56,28 @@ public class PlayerController : MonoBehaviour
                     }
                     if((Controller.transform.position - closest.transform.position).magnitude < 1)
                     {
-                        closest.GetComponentInChildren<InteractableHandler>().StartGlow();
-                        if(Input.GetKey(KeyCode.E))
+                        if (closest.gameObject.activeInHierarchy)
                         {
-                            GameObject.Destroy(closest, 0);
-                            string bait = "worm";
-                            if (Random.Range(0, 2) < 1)
+                            closest.GetComponentInChildren<InteractableHandler>().StartGlow();
+                            if (Input.GetKey(KeyCode.E))
                             {
-                                bait = "grub";
+                                closest.gameObject.SetActive(false);
+                                closest.GetComponentInChildren<InteractableHandler>().StopGlow();
+                                string bait = "worm";
+                                if (Random.Range(0, 2) < 1)
+                                {
+                                    bait = "grub";
+                                }
+                                GameControl.Control.BaitInventory[bait] += 1;
+                                UiControl.uiControl.BuildBaitInventory();
+                                GameControl.Control.Save();
+                                closest = null;
                             }
-                            GameControl.Control.BaitInventory[bait] += 1;
-                            Debug.Log(GameControl.Control.BaitInventory);
-                            UiControl.uiControl.BuildBaitInventory();
-                            GameControl.Control.Save();
-                            closest = null;
                         }
-                    }
-                    else
-                    {
-                        closest.GetComponentInChildren<InteractableHandler>().StopGlow();
+                        else
+                        {
+                            closest.GetComponentInChildren<InteractableHandler>().StopGlow();
+                        }
                     }
                 }
 

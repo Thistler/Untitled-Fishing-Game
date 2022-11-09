@@ -30,6 +30,8 @@ public class GameControl : MonoBehaviour
     public string CurrentSeason;
     public int CurrentHour;
 
+    public GameObject[] LootableItems;
+
     void Start()
     {
         Debug.Log("Game control awake");
@@ -39,6 +41,9 @@ public class GameControl : MonoBehaviour
             Control = this;
 
             Load();
+
+            LootableItems = GameObject.FindGameObjectsWithTag("PickupItem");
+            InvokeRepeating("ReactivateLootPoints", 10.0f, 60.0f);
         }
         else if (Control != this)
         {
@@ -271,6 +276,19 @@ public class GameControl : MonoBehaviour
         Debug.Log("Current weather is " + CurrentWeather);
         UiControl.uiControl.UpdateWeatherSprite();
         Save(); // Prevent reload hijinks
+    }
+
+    // Runs every minute. Picks a random inactive loot point and reactivates it
+    private void ReactivateLootPoints()
+    {
+        List<GameObject> inactiveItems = new List<GameObject>();
+        foreach(GameObject item in LootableItems)
+        {
+            if (item.activeInHierarchy == false) inactiveItems.Add(item);
+        }
+
+        int indexToReactivate = Random.Range(0, inactiveItems.Count - 1);
+        inactiveItems[indexToReactivate].SetActive(true);
     }
 }
 
