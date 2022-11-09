@@ -26,6 +26,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform BobberStartPoint;
     [SerializeField] private GameObject Bobber;
 
+    [SerializeField] private Material SpriteGlowMaterial;
+    [SerializeField] private Material DefaultSpriteMaterial;
+
     private GameObject newBobber;
 
     void Start()
@@ -41,8 +44,42 @@ public class PlayerController : MonoBehaviour
         {
             // While rod is put away
             case 0:
+                // Get distance from all pickup items
+                GameObject[] items = GameObject.FindGameObjectsWithTag("PickupItem");
+                GameObject closest = null;
+                foreach(GameObject item in items)
+                {
+                    if (closest == null) closest = item;
+                    if ((Controller.transform.position - closest.transform.position).magnitude > (Controller.transform.position - item.transform.position).magnitude)
+                    {
+                        closest = item;
+                    }
+                    if((Controller.transform.position - closest.transform.position).magnitude < 1)
+                    {
+                        closest.GetComponentInChildren<InteractableHandler>().StartGlow();
+                        if(Input.GetKey(KeyCode.E))
+                        {
+                            GameObject.Destroy(closest, 0);
+                            string bait = "worm";
+                            if (Random.Range(0, 2) < 1)
+                            {
+                                bait = "grub";
+                            }
+                            GameControl.Control.BaitInventory[bait] += 1;
+                            UiControl.uiControl.BuildBaitInventory();
+                            GameControl.Control.Save();
+                        }
+                    }
+                    else
+                    {
+                        closest.GetComponentInChildren<InteractableHandler>().StopGlow();
+                    }
+                }
+
+                // Walk
                 MovePlayer();
 
+                // Click mouse to cast
                 if(Input.GetKey(KeyCode.Mouse0) && !Input.GetKey(KeyCode.Tab))
                 {
                     // Begin our cast
@@ -188,6 +225,9 @@ public class PlayerController : MonoBehaviour
             }
         }
         BeginReeling("Rough Fish");
+        GameControl.Control.BaitInventory[GameControl.Control.SelectedBait] -= 1;
+        UiControl.uiControl.BuildBaitInventory();
+        GameControl.Control.Save();
     }
 
     private void BeginReeling(string fish)

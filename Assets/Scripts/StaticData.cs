@@ -7,6 +7,11 @@ public class StaticData : MonoBehaviour
     public static StaticData Static;
 
     public List<FishSpecies> FullFishSpeciesList;
+    public Dictionary<string, Sprite> BaitSprites;
+
+    // Sprites
+    public Sprite wormSprite;
+    public Sprite grubSprite;
 
     void Awake()
     {
@@ -15,6 +20,7 @@ public class StaticData : MonoBehaviour
             DontDestroyOnLoad(gameObject);
             Static = this;
 
+            // FISH LIST
             FullFishSpeciesList = new List<FishSpecies>();
             FullFishSpeciesList.Add(new FishSpecies
             {
@@ -37,6 +43,9 @@ public class StaticData : MonoBehaviour
                 hours = null,
                 baits = new Dictionary<string, int> { { "worm", 0 } }
             });
+
+            // BAIT LIST
+            BaitSprites = new Dictionary<string, Sprite>() { { "worm", wormSprite }, { "grub", grubSprite } };
         }
         else if (Static != this)
         {

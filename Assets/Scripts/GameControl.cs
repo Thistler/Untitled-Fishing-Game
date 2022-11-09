@@ -105,8 +105,7 @@ public class GameControl : MonoBehaviour
             PlayerXp = data.PlayerXp;
 
             // Inventory
-            //BaitInventory = data.BaitInventory; TODO: Temp
-            BaitInventory = new Dictionary<string, int>() { { "worm", 10 }, { "grub", 12 } };
+            BaitInventory = data.BaitInventory;
             SelectedBait = data.SelectedBait ?? "worm"; // TODO: Probably temp
         }
         else

@@ -79,11 +79,16 @@ public class UiControl : MonoBehaviour
         }
         foreach (KeyValuePair<string, int> bait in GameControl.Control.BaitInventory)
         {
-            GameObject newBaitBtn = Instantiate(BaitItem);
-            newBaitBtn.transform.Find("NameText").GetComponent<TextMeshProUGUI>().text = bait.Key;
-            newBaitBtn.transform.Find("CountText").GetComponent<TextMeshProUGUI>().text = bait.Value.ToString();
-            newBaitBtn.transform.SetParent(baitGrid.transform);
-            newBaitBtn.GetComponent<Button>().onClick.AddListener(delegate () { GameControl.Control.SelectedBait = bait.Key; });
+            if(bait.Value > 0)
+            {
+                Debug.Log(bait.Key);
+                Debug.Log(StaticData.Static.BaitSprites[bait.Key]);
+                GameObject newBaitBtn = Instantiate(BaitItem);
+                newBaitBtn.transform.Find("Icon").GetComponent<Image>().sprite = StaticData.Static.BaitSprites[bait.Key];
+                newBaitBtn.transform.GetComponentInChildren<TextMeshProUGUI>().text = bait.Value.ToString();
+                newBaitBtn.transform.SetParent(baitGrid.transform);
+                newBaitBtn.GetComponent<Button>().onClick.AddListener(delegate () { GameControl.Control.SelectedBait = bait.Key; });
+            }
         }
     }
 
