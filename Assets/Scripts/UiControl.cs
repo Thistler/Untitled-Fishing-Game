@@ -81,8 +81,6 @@ public class UiControl : MonoBehaviour
         {
             if(bait.Value > 0)
             {
-                Debug.Log(bait.Key);
-                Debug.Log(StaticData.Static.BaitSprites[bait.Key]);
                 GameObject newBaitBtn = Instantiate(BaitItem);
                 newBaitBtn.transform.Find("Icon").GetComponent<Image>().sprite = StaticData.Static.BaitSprites[bait.Key];
                 newBaitBtn.transform.GetComponentInChildren<TextMeshProUGUI>().text = bait.Value.ToString();

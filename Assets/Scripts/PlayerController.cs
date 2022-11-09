@@ -66,8 +66,10 @@ public class PlayerController : MonoBehaviour
                                 bait = "grub";
                             }
                             GameControl.Control.BaitInventory[bait] += 1;
+                            Debug.Log(GameControl.Control.BaitInventory);
                             UiControl.uiControl.BuildBaitInventory();
                             GameControl.Control.Save();
+                            closest = null;
                         }
                     }
                     else
