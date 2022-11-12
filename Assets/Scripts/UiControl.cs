@@ -276,7 +276,7 @@ public class UiControl : MonoBehaviour
         RenderFishDexPanel(FishPanelLocationsPanel, speciesTiles, LocationSpriteDictionary, GameControl.Control.UnlockedFishDataList[argSpecies.species].tiles);
 
         // Baits
-        RenderFishDexPanel(FishPanelBaitPanel, argSpecies.baits, StaticData.Static.BaitSpritesDictionary, GameControl.Control.UnlockedFishDataList[argSpecies.species].tiles);
+        RenderFishDexPanel(FishPanelBaitPanel, argSpecies.baits, StaticData.Static.BaitSpritesDictionary, GameControl.Control.UnlockedFishDataList[argSpecies.species].baits);
     }
 
     private void RenderFishDexPanel(GameObject argGridPanel, Dictionary<string, int> argFishField, Dictionary<string, Sprite> argSpriteDictionary, List<string> argFishDiscoveryList)
