@@ -68,10 +68,12 @@ public class PlayerController : MonoBehaviour
                                 {
                                     bait = "grub";
                                 }
+                                if (!GameControl.Control.BaitInventory.ContainsKey(bait)) GameControl.Control.BaitInventory.Add(bait, 0);
                                 GameControl.Control.BaitInventory[bait] += 1;
                                 UiControl.uiControl.BuildBaitInventory();
                                 GameControl.Control.Save();
                                 closest = null;
+                                GameControl.Control.Save();
                             }
                         }
                     }
@@ -223,29 +225,45 @@ public class PlayerController : MonoBehaviour
                 fishRoll -= fish.Value;
                 if(fishRoll < 0)
                 {
-                    BeginReeling(fish.Key);
+                    BeginReeling(fish.Key, currentTile);
                     // TODO: Calculate fish weight
                     yield break;
                 }
             }
         }
-        BeginReeling("Rough Fish");
+        BeginReeling("Rough Fish", currentTile);
         GameControl.Control.BaitInventory[GameControl.Control.SelectedBait] -= 1;
         UiControl.uiControl.BuildBaitInventory();
         GameControl.Control.Save();
     }
 
-    private void BeginReeling(string fish)
+    private void BeginReeling(string fish, string currentTile)
     {
         Debug.Log("Reeling " + fish);
         PlayerState = 3;
-        LandFish(fish);
+        LandFish(fish, currentTile);
     }
 
-    private void LandFish(string fish)
+    private void LandFish(string fish, string currentTile)
     {
         Debug.Log(fish + " is caught");
         ResetPlayerAndBobber();
+        if (GameControl.Control.UnlockedFishDataList.ContainsKey(fish))
+        {
+            // Update
+        }
+        else
+        {
+            // Add
+            UnlockedFishData entry = new UnlockedFishData() {  // TODO: Create a different data type
+                tiles = new List<string> { currentTile },
+                hours = new List<int> { GameControl.Control.CurrentHour },
+                weathers = new List<string> { GameControl.Control.CurrentWeather },
+                seasons = new List<string> { GameControl.Control.CurrentSeason },
+                baits = new List<string> { GameControl.Control.SelectedBait }
+            };
+            GameControl.Control.UnlockedFishDataList.Add(fish, entry);
+        }
     }
 
     private void ResetPlayerAndBobber()

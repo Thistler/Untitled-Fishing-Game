@@ -31,7 +31,7 @@ public class StaticData : MonoBehaviour
                     new FishTileData{ tilename = "cabin_pond_deep", droprate = 80, weightbonus = 10 } },
                 weathers = new Dictionary<string, int> { { "clear", 10 } },
                 seasons = new Dictionary<string, int> { { "spring", 0 }, { "summer", 10 } },
-                hours = new Dictionary<int, int> { { 10, 0 }, { 11, 0 }, { 12, 0 }, { 13, 0 }, { 14, 0 }, { 15, 0 } },
+                hours = new Dictionary<int, int> { { 3, 0 }, { 10, 0 }, { 11, 0 }, { 12, 0 }, { 13, 0 }, { 14, 0 }, { 15, 0 } },
                 baits = new Dictionary<string, int> { { "worm", 0 } }
             });
             FullFishSpeciesList.Add(new FishSpecies
@@ -69,7 +69,7 @@ public class StaticData : MonoBehaviour
         }
     }
 
-    [SerializeField]
+    [System.Serializable]
     public class FishSpecies
     {
         public string species;
@@ -94,7 +94,7 @@ public class StaticData : MonoBehaviour
         public Dictionary<string, int> baits;
     }
 
-    [SerializeField]
+    [System.Serializable]
     public class FishTileData
     {
         public string tilename;

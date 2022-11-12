@@ -19,6 +19,9 @@ public class GameControl : MonoBehaviour
     public Dictionary<string, int> BaitInventory = new Dictionary<string, int>();
     public string SelectedBait;
 
+    // Fish Collection Data
+    public Dictionary<string, UnlockedFishData> UnlockedFishDataList = new Dictionary<string, UnlockedFishData>();
+
     public System.DateTime TimeOfFirstSave;
     public System.DateTime TimeOfLastSave;
 
@@ -71,6 +74,8 @@ public class GameControl : MonoBehaviour
         data.BaitInventory = BaitInventory;
         data.SelectedBait = SelectedBait;
 
+        data.UnlockedFishDataList = UnlockedFishDataList;
+
         // Time Since Last Save
         data.timeOfFirstSave = TimeOfFirstSave;
         data.timeOfLastSave = currentTime;
@@ -96,7 +101,6 @@ public class GameControl : MonoBehaviour
             file.Close();
 
             TimeOfFirstSave = data.timeOfFirstSave;
-            // Calculate time since last save
             TimeOfLastSave = data.timeOfLastSave;
 
             DateTime currentTime = DateTime.Now;
@@ -110,6 +114,8 @@ public class GameControl : MonoBehaviour
             // Inventory
             BaitInventory = data.BaitInventory;
             SelectedBait = data.SelectedBait ?? "worm"; // TODO: Probably temp
+
+            UnlockedFishDataList = data.UnlockedFishDataList;
         }
         else
         {
@@ -274,8 +280,11 @@ public class GameControl : MonoBehaviour
             if (item.activeInHierarchy == false) inactiveItems.Add(item);
         }
 
-        int indexToReactivate = Random.Range(0, inactiveItems.Count - 1);
-        inactiveItems[indexToReactivate].SetActive(true);
+        if(inactiveItems.Count > 0) // TODO: Possibly have these be the same type for consistency?
+        {
+            int indexToReactivate = Random.Range(0, inactiveItems.Count - 1);
+            inactiveItems[indexToReactivate].SetActive(true);
+        }
     }
 }
 
@@ -289,10 +298,22 @@ class PlayerData
     public Dictionary<string, int> BaitInventory = new Dictionary<string, int>();
     public string SelectedBait;
 
+    public Dictionary<string, UnlockedFishData> UnlockedFishDataList = new Dictionary<string, UnlockedFishData>();
+
     // Times
     public DateTime timeOfFirstSave;
     public DateTime timeOfLastSave;
 
     // Weather
     public string currentWeather;
+}
+
+[System.Serializable]
+public class UnlockedFishData
+{
+    public List<int> hours;
+    public List<string> seasons;
+    public List<string> weathers;
+    public List<string> tiles;
+    public List<string> baits;
 }

@@ -31,6 +31,7 @@ public class UiControl : MonoBehaviour
     [SerializeField] public GameObject FishDex;
     [SerializeField] private GameObject FishDexGeneralIcon;
     [SerializeField] private GameObject FishDexHourIcon;
+    [SerializeField] private Sprite QuestionmarkSprite;
 
     [SerializeField] private GameObject FishList;
 
@@ -138,6 +139,7 @@ public class UiControl : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.J) && !BaitSwitchPanel.activeInHierarchy)
         {
+            BuildFishDex();
             FishDex.SetActive(!FishDex.activeInHierarchy);
         }
     }
@@ -172,7 +174,7 @@ public class UiControl : MonoBehaviour
     public void BuildFishDex()
     {
         PopulateFishListForLevel();
-        RenderFishPanelWithSelectedFish(StaticData.Static.FullFishSpeciesList[0]);
+        //RenderFishPanelWithSelectedFish(StaticData.Static.FullFishSpeciesList[0]);  // TODO: Remove this for now, may replace it with rough fish later
     }
 
     // TODO Fish for each level should probably be calculated at the beginning of the game, or maybe just hardcoded
@@ -203,12 +205,23 @@ public class UiControl : MonoBehaviour
             }
         }
         /////
+
+
+        ClearGridGroupChildren(FishList);
+        int fishIconCount = 0;
         foreach(StaticData.FishSpecies species in fishInLevel)
         {
-            GameObject newFishIcon = Instantiate(FishDexGeneralIcon);
-            newFishIcon.transform.SetParent(FishList.transform);
-            newFishIcon.GetComponent<Image>().sprite = species.sprite;
-            newFishIcon.GetComponent<Button>().onClick.AddListener(delegate () { RenderFishPanelWithSelectedFish(species); });
+            if(GameControl.Control.UnlockedFishDataList.ContainsKey(species.species))
+            {
+                GameObject newFishIcon = AddIconToGrid(FishDexGeneralIcon, FishList, species.sprite);
+                newFishIcon.GetComponent<Button>().onClick.AddListener(delegate () { RenderFishPanelWithSelectedFish(species); });
+                fishIconCount++;
+            }
+        }
+        // Add question mark if there are undiscovered fish
+        if(fishIconCount < fishInLevel.Count)
+        {
+            AddIconToGrid(FishDexGeneralIcon, FishList, QuestionmarkSprite);
         }
     }
 
@@ -218,12 +231,7 @@ public class UiControl : MonoBehaviour
         FishPanelName.GetComponent<TextMeshProUGUI>().text = argSpecies.species;
 
         // Hours
-        GridLayoutGroup hoursGrid = FishPanelHoursPanel.GetComponent<GridLayoutGroup>();
-        // Clear existing panels
-        foreach (Transform child in hoursGrid.transform)
-        {
-            GameObject.Destroy(child.gameObject);
-        } // TODO: Make this its own method
+        ClearGridGroupChildren(FishPanelHoursPanel);
         for (int i = 0; i < 24; i++)
         {
             GameObject hourIcon = Instantiate(FishDexHourIcon);
@@ -242,21 +250,21 @@ public class UiControl : MonoBehaviour
         // Seasons
         if (argSpecies.seasons == null)
         {
-            RenderFishDexPanel(FishPanelSeasonsPanel, SeasonDictionaryParam, SeasonSpriteDictionary);
+            RenderFishDexPanel(FishPanelSeasonsPanel, SeasonDictionaryParam, SeasonSpriteDictionary, GameControl.Control.UnlockedFishDataList[argSpecies.species].seasons);
         }
         else
         {
-            RenderFishDexPanel(FishPanelSeasonsPanel, argSpecies.seasons, SeasonSpriteDictionary);
+            RenderFishDexPanel(FishPanelSeasonsPanel, argSpecies.seasons, SeasonSpriteDictionary, GameControl.Control.UnlockedFishDataList[argSpecies.species].seasons);
         }
 
         // Weathers
         if (argSpecies.weathers == null)
         {
-            RenderFishDexPanel(FishPanelWeathersPanel, WeatherDictionaryParam, WeatherSpritesDictionary);
+            RenderFishDexPanel(FishPanelWeathersPanel, WeatherDictionaryParam, WeatherSpritesDictionary, GameControl.Control.UnlockedFishDataList[argSpecies.species].weathers);
         }
         else
         {
-            RenderFishDexPanel(FishPanelWeathersPanel, argSpecies.weathers, WeatherSpritesDictionary);
+            RenderFishDexPanel(FishPanelWeathersPanel, argSpecies.weathers, WeatherSpritesDictionary, GameControl.Control.UnlockedFishDataList[argSpecies.species].weathers);
         }
 
         // Locations
@@ -265,29 +273,55 @@ public class UiControl : MonoBehaviour
         {
             speciesTiles.Add(tile.tilename, 0);
         }
-        RenderFishDexPanel(FishPanelLocationsPanel, speciesTiles, LocationSpriteDictionary);
+        RenderFishDexPanel(FishPanelLocationsPanel, speciesTiles, LocationSpriteDictionary, GameControl.Control.UnlockedFishDataList[argSpecies.species].tiles);
 
         // Baits
-        RenderFishDexPanel(FishPanelBaitPanel, argSpecies.baits, StaticData.Static.BaitSpritesDictionary);
+        RenderFishDexPanel(FishPanelBaitPanel, argSpecies.baits, StaticData.Static.BaitSpritesDictionary, GameControl.Control.UnlockedFishDataList[argSpecies.species].tiles);
     }
 
-    private void RenderFishDexPanel(GameObject argGridPanel, Dictionary<string, int> argFishField, Dictionary<string, Sprite> argSpriteDictionary)
+    private void RenderFishDexPanel(GameObject argGridPanel, Dictionary<string, int> argFishField, Dictionary<string, Sprite> argSpriteDictionary, List<string> argFishDiscoveryList)
+    {
+        ClearGridGroupChildren(argGridPanel);
+        // Add new panels
+        foreach (KeyValuePair<string, int> item in argFishField)
+        {
+            // Only add the panel if the information is discovered
+            if(argFishDiscoveryList.Contains(item.Key))
+            {
+                AddIconToGrid(FishDexGeneralIcon, argGridPanel, argSpriteDictionary[item.Key]);
+            }
+        }
+        // Add question mark if any information is still undiscovered
+        if(argFishDiscoveryList.Count < argFishField.Count)
+        {
+            AddIconToGrid(FishDexGeneralIcon, argGridPanel, QuestionmarkSprite);
+        }
+    }
+
+    ////////////////////////////////////
+    // Utils
+    ////////////////////////////////////
+    private void ClearGridGroupChildren(GameObject argGridPanel)
     {
         GridLayoutGroup grid = argGridPanel.GetComponent<GridLayoutGroup>();
-        // Clear existing panels
         foreach (Transform child in grid.transform)
         {
             GameObject.Destroy(child.gameObject);
         }
-        foreach (KeyValuePair<string, int> item in argFishField)
-        {
-            GameObject itemIcon = Instantiate(FishDexGeneralIcon);
-            itemIcon.transform.SetParent(argGridPanel.transform);
-            itemIcon.GetComponent<Image>().sprite = argSpriteDictionary[item.Key];
-        }
     }
 
+    // Returns icon as GameObject so we can add listeners to it afterwards
+    private GameObject AddIconToGrid(GameObject argIcon, GameObject argGridPanel, Sprite argSprite)
+    {
+        GameObject newIcon = Instantiate(argIcon);
+        newIcon.transform.SetParent(argGridPanel.transform);
+        newIcon.GetComponent<Image>().sprite = argSprite;
+        return newIcon;
+    }
+
+    ////////////////////////////////////
     // Top UI
+    ////////////////////////////////////
     public void UpdateSeasonSprite()
     {
         UiSeasonImage.sprite = SeasonSpriteDictionary[GameControl.Control.CurrentSeason];
