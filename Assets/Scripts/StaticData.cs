@@ -7,11 +7,11 @@ public class StaticData : MonoBehaviour
     public static StaticData Static;
 
     public List<FishSpecies> FullFishSpeciesList;
-    public Dictionary<string, Sprite> BaitSprites;
+    
+    public Sprite[] FishSpritesArray;
+    public Sprite[] BaitSpritesArray;
 
-    // Sprites
-    public Sprite wormSprite;
-    public Sprite grubSprite;
+    public Dictionary<string, Sprite> BaitSpritesDictionary;
 
     void Awake()
     {
@@ -24,7 +24,8 @@ public class StaticData : MonoBehaviour
             FullFishSpeciesList = new List<FishSpecies>();
             FullFishSpeciesList.Add(new FishSpecies
             {
-                species = "Bull Bass",
+                species = "Aqua Bass",
+                sprite = FishSpritesArray[0],
                 tiles = new List<FishTileData> {
                     new FishTileData{ tilename = "cabin_pond_shallow", droprate = 10, weightbonus = 0 },
                     new FishTileData{ tilename = "cabin_pond_deep", droprate = 80, weightbonus = 10 } },
@@ -35,17 +36,32 @@ public class StaticData : MonoBehaviour
             });
             FullFishSpeciesList.Add(new FishSpecies
             {
-                species = "Tremor Trout",
+                species = "Cloud Trout",
+                sprite = FishSpritesArray[1],
                 tiles = new List<FishTileData> {
                     new FishTileData{ tilename = "cabin_pond_shallow", droprate = 20, weightbonus = 0 } },
-                weathers = new Dictionary<string, int> { { "clear", 30 }, { "rain", 0 } },
+                weathers = new Dictionary<string, int> { { "cloudy", 30 }, { "rainy", 40 }, { "stormy", 60 } },
                 seasons = null,
                 hours = null,
                 baits = new Dictionary<string, int> { { "worm", 0 } }
             });
+            FullFishSpeciesList.Add(new FishSpecies
+            {
+                species = "Mud Crawdad",
+                sprite = FishSpritesArray[2],
+                tiles = new List<FishTileData> {
+                    new FishTileData{ tilename = "cabin_pond_shallow", droprate = 40, weightbonus = 0 } },
+                weathers = null,
+                seasons = new Dictionary<string, int> { { "fall", 10 }, { "winter", 20 } },
+                hours = new Dictionary<int, int> { { 5, 0 }, { 6, 0 }, { 7, 0 }, { 8, 0 }, { 18, 0 }, { 19, 0 }, { 20, 0 }, { 21, 0 } },
+                baits = new Dictionary<string, int> { { "worm", 0 }, { "grub", 0 } }
+            });
 
             // BAIT LIST
-            BaitSprites = new Dictionary<string, Sprite>() { { "worm", wormSprite }, { "grub", grubSprite } };
+            BaitSpritesDictionary = new Dictionary<string, Sprite>() {
+                { "worm", BaitSpritesArray[0] },
+                { "grub", BaitSpritesArray[1] }
+            };
         }
         else if (Static != this)
         {
@@ -57,6 +73,7 @@ public class StaticData : MonoBehaviour
     public class FishSpecies
     {
         public string species;
+        public Sprite sprite;
 
         // DROP RATE is affected by tiles, weather, hour, and bait
         // FISH WEIGHT is affected by tiles, season, and bait

@@ -34,7 +34,6 @@ public class GameControl : MonoBehaviour
 
     void Start()
     {
-        Debug.Log("Game control awake");
         if (Control == null)
         {
             DontDestroyOnLoad(gameObject);
@@ -43,7 +42,9 @@ public class GameControl : MonoBehaviour
             Load();
 
             LootableItems = GameObject.FindGameObjectsWithTag("PickupItem");
-            InvokeRepeating("ReactivateLootPoints", 10.0f, 60.0f);
+            InvokeRepeating("ReactivateLootPoints", 60.0f, 60.0f);
+
+            UiControl.uiControl.BuildFishDex();
         }
         else if (Control != this)
         {
@@ -101,9 +102,6 @@ public class GameControl : MonoBehaviour
             DateTime currentTime = DateTime.Now;
             TimeSpan timeDifference = currentTime - TimeOfLastSave;
 
-            Debug.Log("Game file created on " + TimeOfFirstSave.Date);
-            Debug.Log(timeDifference.Minutes + " minutes since last save.");
-
             CurrentWeather = data.currentWeather ?? "clear";
 
             // Player Stats
@@ -136,9 +134,7 @@ public class GameControl : MonoBehaviour
         SetCurrentSeason();
 
         // Set current weather
-        Debug.Log("Time of last save: " + TimeOfLastSave);
         int hoursSinceSave = (DateTime.Now - TimeOfLastSave).Hours;
-        Debug.Log("Hours since last save: " + hoursSinceSave);
         if (hoursSinceSave > 4) hoursSinceSave = 4;
         // Re-Roll weather an appropriate amount of times
         // This makes weather a bit more realistic for players who reopen the game after only an hour or two
@@ -146,9 +142,7 @@ public class GameControl : MonoBehaviour
         {
             SetCurrentWeather();
         }
-        Debug.Log("Current weather is " + CurrentWeather);
         
-
         // Set fish list
         SetCurrentFishList();
 
@@ -161,7 +155,6 @@ public class GameControl : MonoBehaviour
     // Sets list of fish currently available based on current season, weather, and time of day
     public void SetCurrentFishList()
     {
-        Debug.Log("Setting fish list");
         CurrentAvailableFish = new List<FishSpecies>();
         foreach (FishSpecies species in StaticData.Static.FullFishSpeciesList)
         {
@@ -173,7 +166,6 @@ public class GameControl : MonoBehaviour
                 )
             {
                 CurrentAvailableFish.Add(species);
-                Debug.Log("Added " + species.species + " to fish list");
             }
         }
     }
@@ -186,12 +178,9 @@ public class GameControl : MonoBehaviour
         DateTime currentDateMidnight = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, 0, 0, 0);
 
         double daysSinceFirstSave = (currentDateMidnight - TimeOfFirstSave.Date).TotalDays;
-        Debug.Log(daysSinceFirstSave + " days since file was created");
 
         double daysDivided = daysSinceFirstSave / 8;
         double decimalOnly = daysDivided - Math.Truncate(daysDivided);
-
-        Debug.Log("Days divided decimal is " + decimalOnly);
 
         // 0/8 = 0.0 - first day of spring
         // 1/8 = 0.125 - second day of spring
@@ -218,7 +207,6 @@ public class GameControl : MonoBehaviour
             CurrentSeason = "winter";
         }
 
-        Debug.Log("Current season is " + CurrentSeason);
         UiControl.uiControl.UpdateSeasonSprite();
     }
 
@@ -273,7 +261,6 @@ public class GameControl : MonoBehaviour
             }
         }
 
-        Debug.Log("Current weather is " + CurrentWeather);
         UiControl.uiControl.UpdateWeatherSprite();
         Save(); // Prevent reload hijinks
     }

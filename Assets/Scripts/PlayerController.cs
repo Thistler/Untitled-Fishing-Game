@@ -74,10 +74,10 @@ public class PlayerController : MonoBehaviour
                                 closest = null;
                             }
                         }
-                        else
-                        {
-                            closest.GetComponentInChildren<InteractableHandler>().StopGlow();
-                        }
+                    }
+                    else
+                    {
+                        closest.GetComponentInChildren<InteractableHandler>().StopGlow();
                     }
                 }
 
@@ -85,7 +85,7 @@ public class PlayerController : MonoBehaviour
                 MovePlayer();
 
                 // Click mouse to cast
-                if(Input.GetKey(KeyCode.Mouse0) && !Input.GetKey(KeyCode.Tab))
+                if (Input.GetKey(KeyCode.Mouse0) && !UiControl.uiControl.BaitSwitchPanel.activeInHierarchy && !UiControl.uiControl.FishDex.activeInHierarchy)
                 {
                     // Begin our cast
                     PlayerState = 1;

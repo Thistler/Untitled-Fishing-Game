@@ -194,7 +194,7 @@ TextureImporter:
       name: BasicPalette_4
       rect:
         serializedVersion: 2
-        x: 100
+        x: 0
         y: 100
         width: 100
         height: 100
@@ -215,7 +215,7 @@ TextureImporter:
       name: BasicPalette_5
       rect:
         serializedVersion: 2
-        x: 200
+        x: 100
         y: 100
         width: 100
         height: 100
@@ -236,7 +236,7 @@ TextureImporter:
       name: BasicPalette_6
       rect:
         serializedVersion: 2
-        x: 300
+        x: 200
         y: 100
         width: 100
         height: 100
@@ -257,8 +257,8 @@ TextureImporter:
       name: BasicPalette_7
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
+        x: 300
+        y: 100
         width: 100
         height: 100
       alignment: 0
@@ -278,7 +278,7 @@ TextureImporter:
       name: BasicPalette_8
       rect:
         serializedVersion: 2
-        x: 100
+        x: 0
         y: 0
         width: 100
         height: 100
@@ -299,7 +299,7 @@ TextureImporter:
       name: BasicPalette_9
       rect:
         serializedVersion: 2
-        x: 200
+        x: 100
         y: 0
         width: 100
         height: 100
@@ -320,7 +320,7 @@ TextureImporter:
       name: BasicPalette_10
       rect:
         serializedVersion: 2
-        x: 300
+        x: 200
         y: 0
         width: 100
         height: 100
@@ -333,6 +333,27 @@ TextureImporter:
       bones: []
       spriteID: 4db0851a06d65ba40a37b2a5eff4a51b
       internalID: -807342438
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BasicPalette_11
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 0
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 69e5575bb85cc9f4ab26363075951d7b
+      internalID: -269872392
       vertices: []
       indices: 
       edges: []
@@ -350,6 +371,7 @@ TextureImporter:
     nameFileIdTable:
       BasicPalette_9: -1562071395
       BasicPalette_0: -1024885359
+      BasicPalette_11: -269872392
       BasicPalette_8: -1380074882
       BasicPalette_1: 159213241
       BasicPalette_6: -2039524035
