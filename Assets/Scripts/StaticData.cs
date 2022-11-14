@@ -52,7 +52,7 @@ public class StaticData : MonoBehaviour
                 tiles = new List<FishTileData> {
                     new FishTileData{ tilename = "cabin_pond_shallow", droprate = 40, weightbonus = 0 } },
                 weathers = null,
-                seasons = new Dictionary<string, int> { { "fall", 10 }, { "winter", 20 } },
+                seasons = new Dictionary<string, int> { { "spring", 10 }, { "winter", 20 } },
                 hours = new Dictionary<int, int> { { 5, 0 }, { 6, 0 }, { 7, 0 }, { 8, 0 }, { 18, 0 }, { 19, 0 }, { 20, 0 }, { 21, 0 } },
                 baits = new Dictionary<string, int> { { "worm", 0 }, { "grub", 0 } }
             });

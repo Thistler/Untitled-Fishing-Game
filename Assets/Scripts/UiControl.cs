@@ -186,7 +186,7 @@ public class UiControl : MonoBehaviour
 
         List<StaticData.FishSpecies> fishInLevel = new List<StaticData.FishSpecies>();
         
-        /// TODO: Redo how we find the fish in a given level, we shouldn't be recalculating it constantly
+        // TODO: Redo how we find the fish in a given level, we shouldn't be recalculating it constantly
         foreach(StaticData.FishSpecies species in StaticData.Static.FullFishSpeciesList)
         {
             // TODO: Should probably call this at the beginning of the game so it's not recalculated multiple times
@@ -223,6 +223,10 @@ public class UiControl : MonoBehaviour
         {
             AddIconToGrid(FishDexGeneralIcon, FishList, QuestionmarkSprite);
         }
+        else
+        {
+            FishList.GetComponent<Image>().color = Color.yellow;
+        }
     }
 
     public void RenderFishPanelWithSelectedFish(StaticData.FishSpecies argSpecies)
@@ -234,16 +238,30 @@ public class UiControl : MonoBehaviour
         ClearGridGroupChildren(FishPanelHoursPanel);
         for (int i = 0; i < 24; i++)
         {
-            GameObject hourIcon = Instantiate(FishDexHourIcon);
-            hourIcon.transform.SetParent(FishPanelHoursPanel.transform);
-            hourIcon.GetComponentInChildren<TextMeshProUGUI>().text = i.ToString();
-            if(argSpecies.hours == null || argSpecies.hours.ContainsKey(i))
+            // Check if we have all available hours discovered for the fish
+            bool displayFullHoursList = false;
+            if (GameControl.Control.UnlockedFishDataList[argSpecies.species] != null && GameControl.Control.UnlockedFishDataList[argSpecies.species].hours.Count == argSpecies.hours.Count)
             {
-                hourIcon.GetComponentInChildren<TextMeshProUGUI>().color = Color.green;
+                displayFullHoursList = true;
+                FishPanelHoursPanel.GetComponent<Image>().color = Color.yellow;
             }
+            // If all hours are discovered OR current hour is discovered, display that data
+            if(displayFullHoursList || GameControl.Control.UnlockedFishDataList[argSpecies.species].hours.Contains(i))
+            {
+                GameObject hourIcon = AddIconToGrid(FishDexHourIcon, FishPanelHoursPanel, null, i.ToString());
+                if (argSpecies.hours == null || argSpecies.hours.ContainsKey(i))
+                {
+                    hourIcon.GetComponentInChildren<TextMeshProUGUI>().color = Color.green;
+                }
+                else
+                {
+                    hourIcon.GetComponentInChildren<TextMeshProUGUI>().color = Color.grey;
+                }
+            }
+            // If current hour is not discovered, display question block
             else
             {
-                hourIcon.GetComponentInChildren<TextMeshProUGUI>().color = Color.grey;
+                AddIconToGrid(FishDexGeneralIcon, FishPanelHoursPanel, QuestionmarkSprite);
             }
         }
 
@@ -279,6 +297,9 @@ public class UiControl : MonoBehaviour
         RenderFishDexPanel(FishPanelBaitPanel, argSpecies.baits, StaticData.Static.BaitSpritesDictionary, GameControl.Control.UnlockedFishDataList[argSpecies.species].baits);
     }
 
+    ////////////////////////////////////
+    // Utils
+    ////////////////////////////////////
     private void RenderFishDexPanel(GameObject argGridPanel, Dictionary<string, int> argFishField, Dictionary<string, Sprite> argSpriteDictionary, List<string> argFishDiscoveryList)
     {
         ClearGridGroupChildren(argGridPanel);
@@ -289,18 +310,19 @@ public class UiControl : MonoBehaviour
             if(argFishDiscoveryList.Contains(item.Key))
             {
                 AddIconToGrid(FishDexGeneralIcon, argGridPanel, argSpriteDictionary[item.Key]);
-            }
+}
         }
         // Add question mark if any information is still undiscovered
         if(argFishDiscoveryList.Count < argFishField.Count)
         {
             AddIconToGrid(FishDexGeneralIcon, argGridPanel, QuestionmarkSprite);
         }
+        else
+        {
+            argGridPanel.GetComponent<Image>().color = Color.yellow;
+        }
     }
 
-    ////////////////////////////////////
-    // Utils
-    ////////////////////////////////////
     private void ClearGridGroupChildren(GameObject argGridPanel)
     {
         GridLayoutGroup grid = argGridPanel.GetComponent<GridLayoutGroup>();
@@ -311,11 +333,13 @@ public class UiControl : MonoBehaviour
     }
 
     // Returns icon as GameObject so we can add listeners to it afterwards
-    private GameObject AddIconToGrid(GameObject argIcon, GameObject argGridPanel, Sprite argSprite)
+    // TODO: Possibly add an optional param here that removes the button component from the object
+    private GameObject AddIconToGrid(GameObject argIcon, GameObject argGridPanel, Sprite argSprite = null, string argText = null)
     {
         GameObject newIcon = Instantiate(argIcon);
         newIcon.transform.SetParent(argGridPanel.transform);
-        newIcon.GetComponent<Image>().sprite = argSprite;
+        if(argSprite != null) newIcon.GetComponent<Image>().sprite = argSprite;
+        if (argText != null) newIcon.GetComponentInChildren<TextMeshProUGUI>().text = argText;
         return newIcon;
     }
 

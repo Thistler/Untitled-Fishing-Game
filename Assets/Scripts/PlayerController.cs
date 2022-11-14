@@ -251,11 +251,26 @@ public class PlayerController : MonoBehaviour
         if (GameControl.Control.UnlockedFishDataList.ContainsKey(fish))
         {
             // Update
+            // Tile
+            if(!GameControl.Control.UnlockedFishDataList[fish].tiles.Contains(currentTile))
+                GameControl.Control.UnlockedFishDataList[fish].tiles.Add(currentTile);
+            // Hour
+            if (!GameControl.Control.UnlockedFishDataList[fish].hours.Contains(GameControl.Control.CurrentHour))
+                GameControl.Control.UnlockedFishDataList[fish].hours.Add(GameControl.Control.CurrentHour);
+            // Weather
+            if (!GameControl.Control.UnlockedFishDataList[fish].weathers.Contains(GameControl.Control.CurrentWeather))
+                GameControl.Control.UnlockedFishDataList[fish].weathers.Add(GameControl.Control.CurrentWeather);
+            // Season
+            if (!GameControl.Control.UnlockedFishDataList[fish].seasons.Contains(GameControl.Control.CurrentSeason))
+                GameControl.Control.UnlockedFishDataList[fish].seasons.Add(GameControl.Control.CurrentSeason);
+            // Bait
+            if (!GameControl.Control.UnlockedFishDataList[fish].baits.Contains(GameControl.Control.SelectedBait))
+                GameControl.Control.UnlockedFishDataList[fish].baits.Add(GameControl.Control.SelectedBait);
         }
         else
         {
             // Add
-            UnlockedFishData entry = new UnlockedFishData() {  // TODO: Create a different data type
+            UnlockedFishData entry = new UnlockedFishData() {
                 tiles = new List<string> { currentTile },
                 hours = new List<int> { GameControl.Control.CurrentHour },
                 weathers = new List<string> { GameControl.Control.CurrentWeather },
@@ -264,6 +279,8 @@ public class PlayerController : MonoBehaviour
             };
             GameControl.Control.UnlockedFishDataList.Add(fish, entry);
         }
+
+        GameControl.Control.Save();
     }
 
     private void ResetPlayerAndBobber()
