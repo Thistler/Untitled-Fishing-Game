@@ -12,6 +12,9 @@ public class StaticData : MonoBehaviour
     public Sprite[] BaitSpritesArray;
 
     public Dictionary<string, Sprite> BaitSpritesDictionary;
+    
+    // Drop table for lootable bait points
+    public Dictionary<string, int> WormDirtDropTable;
 
     void Awake()
     {
@@ -61,6 +64,13 @@ public class StaticData : MonoBehaviour
             BaitSpritesDictionary = new Dictionary<string, Sprite>() {
                 { "worm", BaitSpritesArray[0] },
                 { "grub", BaitSpritesArray[1] }
+            };
+
+            // BAIT TABLES
+            WormDirtDropTable = new Dictionary<string, int>()
+            {
+                { "worm", 70 },
+                { "grub", 20 }
             };
         }
         else if (Static != this)

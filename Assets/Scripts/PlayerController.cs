@@ -61,17 +61,40 @@ public class PlayerController : MonoBehaviour
                             closest.GetComponentInChildren<InteractableHandler>().StartGlow();
                             if (Input.GetKey(KeyCode.E))
                             {
+                                // Get loot table for loot point
+                                Dictionary<string, int> lootTable = new Dictionary<string, int>();
+                                switch (closest.name)
+                                {
+                                    case "WormDirt":
+                                        lootTable = StaticData.Static.WormDirtDropTable;
+                                        break;
+                                }
+                                
+                                // Get total weight of loot table
+                                int totalLootWeight = 0;
+                                foreach (KeyValuePair<string, int> tableItem in lootTable)
+                                {
+                                    totalLootWeight += tableItem.Value;
+                                }
+
+                                // Roll for da loot
+                                int lootRoll = Random.Range(0, totalLootWeight);
+                                foreach (KeyValuePair<string, int> baitItem in lootTable)
+                                {
+                                    lootRoll -= baitItem.Value;
+                                    if (lootRoll < 0)
+                                    {
+                                        Debug.Log("Picked up " + baitItem.Key);
+                                        if (!GameControl.Control.BaitInventory.ContainsKey(baitItem.Key)) GameControl.Control.BaitInventory.Add(baitItem.Key, 0);
+                                        GameControl.Control.BaitInventory[baitItem.Key] += 1;
+                                        UiControl.uiControl.BuildBaitInventory();
+                                        break;
+                                    }
+                                }
+
+                                // Pick up, clean up
                                 closest.gameObject.SetActive(false);
                                 closest.GetComponentInChildren<InteractableHandler>().StopGlow();
-                                string bait = "worm";
-                                if (Random.Range(0, 2) < 1)
-                                {
-                                    bait = "grub";
-                                }
-                                if (!GameControl.Control.BaitInventory.ContainsKey(bait)) GameControl.Control.BaitInventory.Add(bait, 0);
-                                GameControl.Control.BaitInventory[bait] += 1;
-                                UiControl.uiControl.BuildBaitInventory();
-                                GameControl.Control.Save();
                                 closest = null;
                                 GameControl.Control.Save();
                             }
