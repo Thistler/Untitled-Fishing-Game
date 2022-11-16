@@ -25,10 +25,22 @@ public class StaticData : MonoBehaviour
 
             // FISH LIST
             FullFishSpeciesList = new List<FishSpecies>();
+            // Rough fish must be listed first
+            // Rough fish's data is not actually used, as it is the fail fish, but tile data must be definied to stop it from showing up in the regular loot table
+            FullFishSpeciesList.Add(new FishSpecies
+            {
+                species = "Rough Fish",
+                sprite = FishSpritesArray[3], // TODO: This should be 0 eventually
+                tiles = new List<FishTileData> { new FishTileData { tilename = "nothing", droprate = 0, weightbonus = 0 } },
+                weathers = null,
+                seasons = null,
+                hours = null,
+                baits = null
+            });
             FullFishSpeciesList.Add(new FishSpecies
             {
                 species = "Aqua Bass",
-                sprite = FishSpritesArray[0],
+                sprite = FishSpritesArray[1],
                 tiles = new List<FishTileData> {
                     new FishTileData{ tilename = "cabin_pond_shallow", droprate = 10, weightbonus = 0 },
                     new FishTileData{ tilename = "cabin_pond_deep", droprate = 80, weightbonus = 10 } },
@@ -40,7 +52,7 @@ public class StaticData : MonoBehaviour
             FullFishSpeciesList.Add(new FishSpecies
             {
                 species = "Cloud Trout",
-                sprite = FishSpritesArray[1],
+                sprite = FishSpritesArray[2],
                 tiles = new List<FishTileData> {
                     new FishTileData{ tilename = "cabin_pond_shallow", droprate = 20, weightbonus = 0 } },
                 weathers = new Dictionary<string, int> { { "cloudy", 30 }, { "rainy", 40 }, { "stormy", 60 } },

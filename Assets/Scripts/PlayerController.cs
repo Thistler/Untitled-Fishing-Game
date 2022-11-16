@@ -26,10 +26,23 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform BobberStartPoint;
     [SerializeField] private GameObject Bobber;
 
-    [SerializeField] private Material SpriteGlowMaterial;
-    [SerializeField] private Material DefaultSpriteMaterial;
-
+    private GameObject BobberHpBar;
+    private GameObject BobberHpBarFill; // TODO: Might want to change the typing on these
     private GameObject newBobber;
+
+    [SerializeField] private GameObject TensionHpBar;
+    [SerializeField] private GameObject TensionHpBarFill;
+
+    [SerializeField] private GameObject Arrow;
+
+    private FishSpecies CurrentHookedFish;
+    private string CurrentFishingTile;
+    private float TotalFishHp = 5000;
+    private float CurrentFishHp = 5000; // TODO: this will be set by fish.
+    private float LineTension;
+    private string ActiveDirection;
+    private int ActiveDirectionCounter;
+    private bool FishIsPulling;
 
     void Start()
     {
@@ -110,7 +123,7 @@ public class PlayerController : MonoBehaviour
                 MovePlayer();
 
                 // Click mouse to cast
-                if (Input.GetKey(KeyCode.Mouse0) && !UiControl.uiControl.BaitSwitchPanel.activeInHierarchy && !UiControl.uiControl.FishDex.activeInHierarchy)
+                if (Input.GetKeyDown(KeyCode.Mouse0) && !UiControl.uiControl.BaitSwitchPanel.activeInHierarchy && !UiControl.uiControl.FishDex.activeInHierarchy)
                 {
                     // Begin our cast
                     PlayerState = 1;
@@ -132,7 +145,7 @@ public class PlayerController : MonoBehaviour
                         BobberStartPoint.eulerAngles = new Vector3(0f, 90f, 0f);
                     }
 
-                    newBobber = (GameObject)Instantiate(Bobber, BobberStartPoint.position, new Quaternion(0f, 0f, 0f, 0f));
+                    newBobber = GameObject.Instantiate(Bobber, BobberStartPoint.position, new Quaternion(0f, 0f, 0f, 0f));
                     newBobber.GetComponent<Rigidbody>().AddForce(BobberStartPoint.forward * 100f);
                 }
                 break;
@@ -149,6 +162,76 @@ public class PlayerController : MonoBehaviour
 
             // Reeling, fish is comin' in hot
             case 3:
+                // TODO: Strike
+
+                // Determine if player is holding the button in the right direction
+                bool pushingCorrectDirection = false;
+                switch (ActiveDirection)
+                {
+                    case "up":
+                        if(PlayerMovementInput.z > 0.1 && PlayerMovementInput.x == 0) pushingCorrectDirection = true;
+                        break;
+                    case "down":
+                        if (PlayerMovementInput.z < -0.1 && PlayerMovementInput.x == 0) pushingCorrectDirection = true;
+                        break;
+                    case "left":
+                        if (PlayerMovementInput.x < -0.3 && PlayerMovementInput.z == 0) pushingCorrectDirection = true;
+                        break;
+                    case "right":
+                        if (PlayerMovementInput.x > 0.3 && PlayerMovementInput.z == 0) pushingCorrectDirection = true;
+                        break;
+                }
+
+                if (Input.GetKey(KeyCode.Mouse0))
+                {
+                    CurrentFishHp--; // TODO: Different formula for determining how much the hp decreases
+                    if(FishIsPulling)
+                    {
+                        if (pushingCorrectDirection) LineTension += 2;
+                        else LineTension += 3;
+                    }
+                    else LineTension++;
+                }
+                else
+                {
+                    if(FishIsPulling)
+                    {
+                        if (pushingCorrectDirection) LineTension--;
+                        else LineTension++;
+                    }
+                    else
+                    {
+                        LineTension--;
+                    }
+                }
+
+                if (LineTension < 0)
+                {
+                    LineTension = 0;
+                }
+
+                // Handle bars
+                float tensionPercent = LineTension / 1000; // TODO: Should this be a separate value increased by leveling up?
+                // Keep scale and tension percent separate so bar doesn't overflow and we can save tension percent to calculate line break
+                float tensionScaleX = tensionPercent;
+                if (tensionScaleX > 1) tensionScaleX = 1;
+                Vector3 tensionScale = new Vector3(tensionScaleX, TensionHpBarFill.transform.localScale.y, TensionHpBarFill.transform.localScale.z);
+                TensionHpBarFill.transform.localScale = tensionScale;
+                float percent = CurrentFishHp / TotalFishHp;
+                Vector3 scale = new Vector3(percent, BobberHpBarFill.transform.localScale.y, BobberHpBarFill.transform.localScale.z);
+                BobberHpBarFill.transform.localScale = scale;
+
+                // Land or escape
+                if (CurrentFishHp <= 0)
+                {
+                    LandFish();
+                }
+                else if (tensionPercent > 1)
+                {
+                    // Roll for chance of line breaking
+                    float breakRoll = Random.Range(0, (tensionPercent * 100));
+                    if (breakRoll > 100) EscapeFish(); // TODO: Put this in a couroutine so it doesn't fire every frame, or maybe make sure the line has to be at full tension for at least 0.5-1 sec before breaking
+                }
                 break;
         }
     }
@@ -203,34 +286,35 @@ public class PlayerController : MonoBehaviour
         ResetPlayerAndBobber();
     }
 
-    public void StartWaitingForBite(string currentTile)
+    public void StartWaitingForBite(string tile)
     {
         PlayerState = 2;
-        StartCoroutine("AwaitFishBite", currentTile);
+        CurrentFishingTile = tile;
+        StartCoroutine("AwaitFishBite");
     }
 
-    private IEnumerator AwaitFishBite(string currentTile)
+    private IEnumerator AwaitFishBite()
     {
-        Debug.Log("Cast line in " + currentTile + " with " + GameControl.Control.SelectedBait);
+        Debug.Log("Cast line in " + CurrentFishingTile + " with " + GameControl.Control.SelectedBait);
 
         int totalDropWeights = 0;
 
         // Get fish available for this tile
         Debug.Log("Getting drop rates for cast");
-        Dictionary<string, int> fishInTile = new Dictionary<string, int>();
+        Dictionary<FishSpecies, int> fishInTile = new Dictionary<FishSpecies, int>();
         foreach (FishSpecies species in GameControl.Control.CurrentAvailableFish)
         {
-            if(species.baits != null || species.baits.ContainsKey(GameControl.Control.SelectedBait))
+            if(species.baits == null || species.baits.ContainsKey(GameControl.Control.SelectedBait))
             {
                 foreach(FishTileData tile in species.tiles)
                 {
-                    if(tile.tilename == currentTile)
+                    if(tile.tilename == CurrentFishingTile)
                     {
                         int dropweight = tile.droprate;
                         if (species.seasons != null && species.seasons.ContainsKey(GameControl.Control.CurrentSeason)) dropweight += species.seasons[GameControl.Control.CurrentSeason];
                         if (species.baits != null && species.baits.ContainsKey(GameControl.Control.SelectedBait)) dropweight += species.baits[GameControl.Control.SelectedBait];
                         if(species.hours != null && species.hours.ContainsKey(GameControl.Control.CurrentHour)) dropweight += species.hours[GameControl.Control.CurrentHour];
-                        fishInTile.Add(species.species, dropweight);
+                        fishInTile.Add(species, dropweight);
                         totalDropWeights += dropweight;
                         Debug.Log("Added " + species.species + " to fish list with drop rate of " + dropweight + ". Total dropweight is now " + totalDropWeights);
                     }
@@ -238,71 +322,137 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        for (int i = 0; i < 30; i++)
+        for (int i = 0; i < 10; i++) // TODO: Bump back to 30
         {
             yield return new WaitForSecondsRealtime(2);
             Debug.Log(i*2 + " seconds have passed");
             int fishRoll = Random.Range(0, totalDropWeights + 1000); // TODO: This number will be calculated somehow later
-            foreach (KeyValuePair<string, int> fish in fishInTile)
+            foreach (KeyValuePair<FishSpecies, int> fish in fishInTile)
             {
                 fishRoll -= fish.Value;
                 if(fishRoll < 0)
                 {
-                    BeginReeling(fish.Key, currentTile);
+                    CurrentHookedFish = fish.Key;
+                    BeginReeling();
                     // TODO: Calculate fish weight
                     yield break;
                 }
             }
         }
-        BeginReeling("Rough Fish", currentTile);
+        // If no fish are caught, recieve Rough Fish
+        CurrentHookedFish = StaticData.Static.FullFishSpeciesList[0];
+
+        // Prepare to reel
+        BobberHpBar = newBobber.transform.Find("HpBar").gameObject; // TODO: Maybe move to start?
+        BobberHpBarFill = BobberHpBar.transform.Find("HpBarFill").gameObject; // TODO: Maybe move to start?
+        Arrow.SetActive(false);
+        BobberHpBar.SetActive(true);
+        TensionHpBar.SetActive(true);
+        ActiveDirection = "";
+        BeginReeling();
+
+        // Remove bait and save
         GameControl.Control.BaitInventory[GameControl.Control.SelectedBait] -= 1;
         UiControl.uiControl.BuildBaitInventory();
         GameControl.Control.Save();
     }
 
-    private void BeginReeling(string fish, string currentTile)
+    private void BeginReeling()
     {
-        Debug.Log("Reeling " + fish);
+        Debug.Log("Reeling " + CurrentHookedFish.species);
         PlayerState = 3;
-        LandFish(fish, currentTile);
+        StartCoroutine("ActivatePullDirection");
     }
 
-    private void LandFish(string fish, string currentTile)
+    private IEnumerator ActivatePullDirection()
     {
-        Debug.Log(fish + " is caught");
+        while(PlayerState == 3) // TODO: Change this to somethng that allows us to get the fish to stop pulling sooner
+        {
+            Arrow.transform.SetPositionAndRotation(Arrow.transform.position, new Quaternion(0, 0, 0, 0));
+            Arrow.SetActive(!Arrow.activeInHierarchy);
+
+            if (Arrow.activeInHierarchy == true)
+            {
+                FishIsPulling = true;
+                
+
+                int direction = Random.Range(0, 4);
+                switch (direction)
+                {
+                    // Up
+                    case 0:
+                        ActiveDirection = "up";
+                        break;
+                    // Down
+                    case 1:
+                        ActiveDirection = "down";
+                        Arrow.transform.Rotate(new Vector3(0, 0, 180.0f));
+                        break;
+                    // Left
+                    case 2:
+                        ActiveDirection = "left";
+                        Arrow.transform.Rotate(new Vector3(0, 0, 90.0f));
+                        break;
+                    // Right
+                    case 3:
+                        ActiveDirection = "right";
+                        Arrow.transform.Rotate(new Vector3(0, 0, 270.0f));
+                        break;
+                }
+            }
+            else
+            {
+                FishIsPulling = false;
+            }
+            yield return new WaitForSecondsRealtime(5); // TODO: Randomize
+        }
+    }
+
+    private void LandFish()
+    {
+        Debug.Log(CurrentHookedFish.species + " is caught");
         ResetPlayerAndBobber();
-        if (GameControl.Control.UnlockedFishDataList.ContainsKey(fish))
+
+        // Update fish dex
+        if (GameControl.Control.UnlockedFishDataList.ContainsKey(CurrentHookedFish.species))
         {
             // Update
             // Tile
-            if(!GameControl.Control.UnlockedFishDataList[fish].tiles.Contains(currentTile))
-                GameControl.Control.UnlockedFishDataList[fish].tiles.Add(currentTile);
+            if(!GameControl.Control.UnlockedFishDataList[CurrentHookedFish.species].tiles.Contains(CurrentFishingTile))
+                GameControl.Control.UnlockedFishDataList[CurrentHookedFish.species].tiles.Add(CurrentFishingTile);
             // Hour
-            if (!GameControl.Control.UnlockedFishDataList[fish].hours.Contains(GameControl.Control.CurrentHour))
-                GameControl.Control.UnlockedFishDataList[fish].hours.Add(GameControl.Control.CurrentHour);
+            if (!GameControl.Control.UnlockedFishDataList[CurrentHookedFish.species].hours.Contains(GameControl.Control.CurrentHour))
+                GameControl.Control.UnlockedFishDataList[CurrentHookedFish.species].hours.Add(GameControl.Control.CurrentHour);
             // Weather
-            if (!GameControl.Control.UnlockedFishDataList[fish].weathers.Contains(GameControl.Control.CurrentWeather))
-                GameControl.Control.UnlockedFishDataList[fish].weathers.Add(GameControl.Control.CurrentWeather);
+            if (!GameControl.Control.UnlockedFishDataList[CurrentHookedFish.species].weathers.Contains(GameControl.Control.CurrentWeather))
+                GameControl.Control.UnlockedFishDataList[CurrentHookedFish.species].weathers.Add(GameControl.Control.CurrentWeather);
             // Season
-            if (!GameControl.Control.UnlockedFishDataList[fish].seasons.Contains(GameControl.Control.CurrentSeason))
-                GameControl.Control.UnlockedFishDataList[fish].seasons.Add(GameControl.Control.CurrentSeason);
+            if (!GameControl.Control.UnlockedFishDataList[CurrentHookedFish.species].seasons.Contains(GameControl.Control.CurrentSeason))
+                GameControl.Control.UnlockedFishDataList[CurrentHookedFish.species].seasons.Add(GameControl.Control.CurrentSeason);
             // Bait
-            if (!GameControl.Control.UnlockedFishDataList[fish].baits.Contains(GameControl.Control.SelectedBait))
-                GameControl.Control.UnlockedFishDataList[fish].baits.Add(GameControl.Control.SelectedBait);
+            if (!GameControl.Control.UnlockedFishDataList[CurrentHookedFish.species].baits.Contains(GameControl.Control.SelectedBait))
+                GameControl.Control.UnlockedFishDataList[CurrentHookedFish.species].baits.Add(GameControl.Control.SelectedBait);
         }
         else
         {
             // Add
             UnlockedFishData entry = new UnlockedFishData() {
-                tiles = new List<string> { currentTile },
+                tiles = new List<string> { CurrentFishingTile },
                 hours = new List<int> { GameControl.Control.CurrentHour },
                 weathers = new List<string> { GameControl.Control.CurrentWeather },
                 seasons = new List<string> { GameControl.Control.CurrentSeason },
                 baits = new List<string> { GameControl.Control.SelectedBait }
             };
-            GameControl.Control.UnlockedFishDataList.Add(fish, entry);
+            GameControl.Control.UnlockedFishDataList.Add(CurrentHookedFish.species, entry);
         }
 
+        GameControl.Control.Save();
+    }
+
+    private void EscapeFish()
+    {
+        Debug.Log(CurrentHookedFish.species + " escaped");
+        ResetPlayerAndBobber();
         GameControl.Control.Save();
     }
 
@@ -314,5 +464,9 @@ public class PlayerController : MonoBehaviour
             Destroy(newBobber, 0);
         }
         StopCoroutine("AwaitFishBite");
+        StopCoroutine("ActivatePullDirection");
+        TensionHpBar.SetActive(false);
+        LineTension = 0;
+        CurrentFishHp = TotalFishHp; // TODO: This should probably be moved since fish hp will vary
     }
 }
