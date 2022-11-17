@@ -694,7 +694,7 @@ GameObject:
   - component: {fileID: 422821171}
   - component: {fileID: 422821170}
   m_Layer: 5
-  m_Name: PressureBarBg
+  m_Name: TensionBarBg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -768,7 +768,7 @@ GameObject:
   m_Component:
   - component: {fileID: 457215086}
   m_Layer: 5
-  m_Name: PressureBar
+  m_Name: TensionBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1213,7 +1213,7 @@ GameObject:
   - component: {fileID: 701722218}
   - component: {fileID: 701722217}
   m_Layer: 5
-  m_Name: PressureBarFill
+  m_Name: TensionBarFill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8898,6 +8898,10 @@ PrefabInstance:
       propertyPath: Arrow
       value: 
       objectReference: {fileID: 241622159}
+    - target: {fileID: 8875802705550303670, guid: a5a5940c8578c4d4898c83073ca3aa78, type: 3}
+      propertyPath: BobberPrefab
+      value: 
+      objectReference: {fileID: 8855882950695989251, guid: 825cf304201c2a448b696eb1bcd7cfbb, type: 3}
     - target: {fileID: 8875802705550303670, guid: a5a5940c8578c4d4898c83073ca3aa78, type: 3}
       propertyPath: TensionHpBar
       value: 

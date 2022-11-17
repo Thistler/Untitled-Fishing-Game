@@ -24,11 +24,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Sprite sideSprite;
 
     [SerializeField] private Transform BobberStartPoint;
-    [SerializeField] private GameObject Bobber;
+    [SerializeField] private GameObject BobberPrefab;
 
     private GameObject BobberHpBar;
     private GameObject BobberHpBarFill; // TODO: Might want to change the typing on these
-    private GameObject newBobber;
+    private GameObject InstantiatedBobber;
 
     [SerializeField] private GameObject TensionHpBar;
     [SerializeField] private GameObject TensionHpBarFill;
@@ -42,6 +42,8 @@ public class PlayerController : MonoBehaviour
     private float LineTension;
     private string ActiveDirection;
     private int ActiveDirectionCounter;
+    private bool TimeToStrike;
+    private float StrikeTimer;
     private bool FishIsPulling;
 
     void Start()
@@ -145,8 +147,10 @@ public class PlayerController : MonoBehaviour
                         BobberStartPoint.eulerAngles = new Vector3(0f, 90f, 0f);
                     }
 
-                    newBobber = GameObject.Instantiate(Bobber, BobberStartPoint.position, new Quaternion(0f, 0f, 0f, 0f));
-                    newBobber.GetComponent<Rigidbody>().AddForce(BobberStartPoint.forward * 100f);
+                    InstantiatedBobber = GameObject.Instantiate(BobberPrefab, BobberStartPoint.position, new Quaternion(0f, 0f, 0f, 0f));
+                    InstantiatedBobber.GetComponent<Rigidbody>().AddForce(BobberStartPoint.forward * 100f);
+                    BobberHpBar = InstantiatedBobber.transform.Find("HpBar").gameObject;
+                    BobberHpBarFill = BobberHpBar.transform.Find("HpBarFill").gameObject;
                 }
                 break;
             
@@ -162,7 +166,18 @@ public class PlayerController : MonoBehaviour
 
             // Reeling, fish is comin' in hot
             case 3:
-                // TODO: Strike
+                // Attempt to strike
+                if(TimeToStrike)
+                {
+                    if(Input.GetKeyDown(KeyCode.Mouse0))
+                    {
+                        TimeToStrike = false;
+                        CurrentFishHp -= 1000; // TODO: Recalculate based on player level
+                        break;
+                    }
+                    StrikeTimer += Time.deltaTime;
+                    if (StrikeTimer > 2.0f) TimeToStrike = false; // TODO: Recalculate based on player xp
+                }
 
                 // Determine if player is holding the button in the right direction
                 bool pushingCorrectDirection = false;
@@ -343,8 +358,6 @@ public class PlayerController : MonoBehaviour
         CurrentHookedFish = StaticData.Static.FullFishSpeciesList[0];
 
         // Prepare to reel
-        BobberHpBar = newBobber.transform.Find("HpBar").gameObject; // TODO: Maybe move to start?
-        BobberHpBarFill = BobberHpBar.transform.Find("HpBarFill").gameObject; // TODO: Maybe move to start?
         Arrow.SetActive(false);
         BobberHpBar.SetActive(true);
         TensionHpBar.SetActive(true);
@@ -361,20 +374,24 @@ public class PlayerController : MonoBehaviour
     {
         Debug.Log("Reeling " + CurrentHookedFish.species);
         PlayerState = 3;
+        InstantiatedBobber.GetComponent<AudioSource>().Play();
         StartCoroutine("ActivatePullDirection");
+        TimeToStrike = true;
+        StrikeTimer = 0;
     }
 
     private IEnumerator ActivatePullDirection()
     {
         while(PlayerState == 3) // TODO: Change this to somethng that allows us to get the fish to stop pulling sooner
         {
+            yield return new WaitForSecondsRealtime(10); // TODO: Randomize
+
             Arrow.transform.SetPositionAndRotation(Arrow.transform.position, new Quaternion(0, 0, 0, 0));
             Arrow.SetActive(!Arrow.activeInHierarchy);
 
             if (Arrow.activeInHierarchy == true)
             {
                 FishIsPulling = true;
-                
 
                 int direction = Random.Range(0, 4);
                 switch (direction)
@@ -404,7 +421,6 @@ public class PlayerController : MonoBehaviour
             {
                 FishIsPulling = false;
             }
-            yield return new WaitForSecondsRealtime(5); // TODO: Randomize
         }
     }
 
@@ -459,9 +475,9 @@ public class PlayerController : MonoBehaviour
     private void ResetPlayerAndBobber()
     {
         PlayerState = 0;
-        if (newBobber)
+        if (InstantiatedBobber)
         {
-            Destroy(newBobber, 0);
+            Destroy(InstantiatedBobber, 0);
         }
         StopCoroutine("AwaitFishBite");
         StopCoroutine("ActivatePullDirection");
