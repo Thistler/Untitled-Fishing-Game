@@ -77,11 +77,11 @@ public class GameControl : MonoBehaviour
         data.UnlockedFishDataList = UnlockedFishDataList;
 
         // Time Since Last Save
-        data.timeOfFirstSave = TimeOfFirstSave;
-        data.timeOfLastSave = currentTime;
+        data.TimeOfFirstSave = TimeOfFirstSave;
+        data.TimeOfLastSave = currentTime;
 
         // Weather
-        data.currentWeather = CurrentWeather;
+        data.CurrentWeather = CurrentWeather;
 
         // Save and close file
         bf.Serialize(file, data);
@@ -100,13 +100,13 @@ public class GameControl : MonoBehaviour
             PlayerData data = (PlayerData)bf.Deserialize(file);
             file.Close();
 
-            TimeOfFirstSave = data.timeOfFirstSave;
-            TimeOfLastSave = data.timeOfLastSave;
+            TimeOfFirstSave = data.TimeOfFirstSave;
+            TimeOfLastSave = data.TimeOfLastSave;
 
             DateTime currentTime = DateTime.Now;
             TimeSpan timeDifference = currentTime - TimeOfLastSave;
 
-            CurrentWeather = data.currentWeather ?? "clear";
+            CurrentWeather = data.CurrentWeather ?? "clear";
 
             // Player Stats
             PlayerXp = data.PlayerXp;
@@ -301,11 +301,11 @@ class PlayerData
     public Dictionary<string, UnlockedFishData> UnlockedFishDataList = new Dictionary<string, UnlockedFishData>();
 
     // Times
-    public DateTime timeOfFirstSave;
-    public DateTime timeOfLastSave;
+    public DateTime TimeOfFirstSave;
+    public DateTime TimeOfLastSave;
 
     // Weather
-    public string currentWeather;
+    public string CurrentWeather;
 }
 
 [System.Serializable]

@@ -37,7 +37,8 @@ public class StaticData : MonoBehaviour
                 hours = null,
                 baits = null,
                 fishBaseHp = 3000,
-                fishBaseStregnth = 1
+                fishBaseStregnth = 1,
+                fishBaseXp = 1
             });
             FullFishSpeciesList.Add(new FishSpecies
             {
@@ -51,7 +52,8 @@ public class StaticData : MonoBehaviour
                 hours = new Dictionary<int, int> { { 3, 0 }, { 10, 0 }, { 11, 0 }, { 12, 0 }, { 13, 0 }, { 14, 0 }, { 15, 0 } },
                 baits = new Dictionary<string, int> { { "worm", 0 } },
                 fishBaseHp = 5000,
-                fishBaseStregnth = 1
+                fishBaseStregnth = 1,
+                fishBaseXp = 3
             });
             FullFishSpeciesList.Add(new FishSpecies
             {
@@ -64,7 +66,8 @@ public class StaticData : MonoBehaviour
                 hours = null,
                 baits = new Dictionary<string, int> { { "worm", 0 } },
                 fishBaseHp = 6000,
-                fishBaseStregnth = 2
+                fishBaseStregnth = 2,
+                fishBaseXp = 5
             });
             FullFishSpeciesList.Add(new FishSpecies
             {
@@ -77,7 +80,8 @@ public class StaticData : MonoBehaviour
                 hours = new Dictionary<int, int> { { 5, 0 }, { 6, 0 }, { 7, 0 }, { 8, 0 }, { 18, 0 }, { 19, 0 }, { 20, 0 }, { 21, 0 } },
                 baits = new Dictionary<string, int> { { "worm", 0 }, { "grub", 0 } },
                 fishBaseHp = 6000,
-                fishBaseStregnth = 2
+                fishBaseStregnth = 2,
+                fishBaseXp = 5
             });
 
             // BAIT LIST
@@ -108,7 +112,8 @@ public class StaticData : MonoBehaviour
         // HP represents how fast the catch bar (green bar above bobber) gets depleted
         // Strength represents how fast the tension goes up
         public int fishBaseHp;
-        public int fishBaseStregnth; // Eventually these may be affected by multipliers/weight
+        public int fishBaseStregnth;
+        public int fishBaseXp; // Eventually these may be affected by multipliers/weight
 
         // DROP RATE is affected by tiles, weather, hour, and bait
         // FISH WEIGHT is affected by tiles, season, and bait

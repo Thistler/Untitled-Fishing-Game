@@ -495,6 +495,7 @@ public class PlayerController : MonoBehaviour
             GameControl.Control.UnlockedFishDataList.Add(CurrentHookedFish.species, entry);
         }
 
+        GameControl.Control.PlayerXp += CurrentHookedFish.fishBaseXp;
         GameControl.Control.Save();
     }
 
