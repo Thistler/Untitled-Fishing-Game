@@ -19,9 +19,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private CharacterController Controller;
     [SerializeField] private float Speed;
 
-    [SerializeField] private Sprite frontSprite;
-    [SerializeField] private Sprite backSprite;
-    [SerializeField] private Sprite sideSprite;
+    // Arrays should be in order of: Front, back, side
+    [SerializeField] private Sprite[] StandingSprites;
+    [SerializeField] private Sprite[] FishingSprites;
+    [SerializeField] private Sprite[] PullingSprites;
+    private int SpriteAngle;
 
     [SerializeField] private Transform BobberStartPoint;
     [SerializeField] private GameObject BobberPrefab;
@@ -35,10 +37,13 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private GameObject Arrow;
 
+    [SerializeField] private AudioClip CastingSoundEffect;
+    [SerializeField] private AudioClip ReelingSoundEffect;
+
     private FishSpecies CurrentHookedFish;
     private string CurrentFishingTile;
-    private float TotalFishHp = 5000;
-    private float CurrentFishHp = 5000; // TODO: this will be set by fish.
+    private float TotalFishHp;
+    private float CurrentFishHp;
     private float LineTension;
     private string ActiveDirection;
     private int ActiveDirectionCounter;
@@ -127,23 +132,25 @@ public class PlayerController : MonoBehaviour
                 // Click mouse to cast
                 if (Input.GetKeyDown(KeyCode.Mouse0) && !UiControl.uiControl.BaitSwitchPanel.activeInHierarchy && !UiControl.uiControl.FishDex.activeInHierarchy)
                 {
+                    GetComponent<AudioSource>().PlayOneShot(CastingSoundEffect, 0.7F);
+
                     // Begin our cast
                     PlayerState = 1;
 
                     // Get our direction
-                    if (PlayerSprite.sprite == frontSprite)
+                    if (SpriteAngle == 0)
                     {
                         BobberStartPoint.eulerAngles = new Vector3(0f, 180f, 0f);
                     }
-                    else if (PlayerSprite.sprite == backSprite)
+                    else if (SpriteAngle == 1)
                     {
                         BobberStartPoint.eulerAngles = new Vector3(0f, 0f, 0f);
                     }
-                    else if (PlayerSprite.sprite == sideSprite && PlayerSprite.flipX)
+                    else if (SpriteAngle == 2 && PlayerSprite.flipX)
                     {
                         BobberStartPoint.eulerAngles = new Vector3(0f, 270f, 0f);
                     }
-                    else if (PlayerSprite.sprite == sideSprite && !PlayerSprite.flipX) {
+                    else if (SpriteAngle == 2 && !PlayerSprite.flipX) {
                         BobberStartPoint.eulerAngles = new Vector3(0f, 90f, 0f);
                     }
 
@@ -151,6 +158,7 @@ public class PlayerController : MonoBehaviour
                     InstantiatedBobber.GetComponent<Rigidbody>().AddForce(BobberStartPoint.forward * 100f);
                     BobberHpBar = InstantiatedBobber.transform.Find("HpBar").gameObject;
                     BobberHpBarFill = BobberHpBar.transform.Find("HpBarFill").gameObject;
+                    PlayerSprite.sprite = FishingSprites[SpriteAngle];
                 }
                 break;
             
@@ -199,20 +207,21 @@ public class PlayerController : MonoBehaviour
 
                 if (Input.GetKey(KeyCode.Mouse0))
                 {
+                    if (!GetComponent<AudioSource>().isPlaying) GetComponent<AudioSource>().PlayOneShot(ReelingSoundEffect);
                     CurrentFishHp--; // TODO: Different formula for determining how much the hp decreases
-                    if(FishIsPulling)
+                    if (FishIsPulling)
                     {
-                        if (pushingCorrectDirection) LineTension += 2;
-                        else LineTension += 3;
+                        if (pushingCorrectDirection) LineTension += CurrentHookedFish.fishBaseStregnth * 2;
+                        else LineTension += CurrentHookedFish.fishBaseStregnth * 3;
                     }
-                    else LineTension++;
+                    else LineTension += CurrentHookedFish.fishBaseStregnth;
                 }
                 else
                 {
-                    if(FishIsPulling)
+                    if (FishIsPulling)
                     {
                         if (pushingCorrectDirection) LineTension--;
-                        else LineTension++;
+                        else LineTension += CurrentHookedFish.fishBaseStregnth;
                     }
                     else
                     {
@@ -223,6 +232,17 @@ public class PlayerController : MonoBehaviour
                 if (LineTension < 0)
                 {
                     LineTension = 0;
+                }
+
+                // Update Sprites and Audio
+                if(FishIsPulling)
+                {
+                    PlayerSprite.sprite = PullingSprites[SpriteAngle];
+                    InstantiatedBobber.GetComponent<BobberCollider>().PlaySplashSound();
+                }
+                else
+                {
+                    PlayerSprite.sprite = FishingSprites[SpriteAngle];
                 }
 
                 // Handle bars
@@ -259,24 +279,25 @@ public class PlayerController : MonoBehaviour
 
         if (PlayerMovementInput.z < -0.1)
         {
-            PlayerSprite.sprite = frontSprite;
+            SpriteAngle = 0;
             PlayerSprite.flipX = false;
         }
         if (PlayerMovementInput.z > 0.1)
         {
-            PlayerSprite.sprite = backSprite;
+            SpriteAngle = 1;
             PlayerSprite.flipX = false;
         }
         if (PlayerMovementInput.x < -0.3)
         {
-            PlayerSprite.sprite = sideSprite;
+            SpriteAngle = 2;
             PlayerSprite.flipX = true;
         }
         if (PlayerMovementInput.x > 0.3)
         {
-            PlayerSprite.sprite = sideSprite;
+            SpriteAngle = 2;
             PlayerSprite.flipX = false;
         }
+        PlayerSprite.sprite = StandingSprites[SpriteAngle];
     }
 
     // When casting or waiting, we can cancel the cast by pressing q
@@ -358,26 +379,38 @@ public class PlayerController : MonoBehaviour
         CurrentHookedFish = StaticData.Static.FullFishSpeciesList[0];
 
         // Prepare to reel
-        Arrow.SetActive(false);
-        BobberHpBar.SetActive(true);
-        TensionHpBar.SetActive(true);
-        ActiveDirection = "";
-        BeginReeling();
-
-        // Remove bait and save
-        GameControl.Control.BaitInventory[GameControl.Control.SelectedBait] -= 1;
-        UiControl.uiControl.BuildBaitInventory();
-        GameControl.Control.Save();
+        BeginReeling();        
     }
 
     private void BeginReeling()
     {
         Debug.Log("Reeling " + CurrentHookedFish.species);
+
+        // Set vars
         PlayerState = 3;
-        InstantiatedBobber.GetComponent<AudioSource>().Play();
-        StartCoroutine("ActivatePullDirection");
+        ActiveDirection = "";
         TimeToStrike = true;
         StrikeTimer = 0;
+        CurrentFishHp = TotalFishHp = CurrentHookedFish.fishBaseHp;
+
+        // Switch coroutines
+        StopCoroutine("AwaitFishBite");
+        StartCoroutine("ActivatePullDirection");
+
+        // Show UI elements
+        Arrow.SetActive(false);
+        BobberHpBar.SetActive(true);
+        TensionHpBar.SetActive(true);
+        
+        // Sink bobber
+        InstantiatedBobber.GetComponent<AudioSource>().Play(); // TODO: Have this be a function in the bobber so we only have to GetComponent once
+        InstantiatedBobber.GetComponent<BobberCollider>().SinkSprite();
+        
+
+        // Remove bait and save
+        GameControl.Control.BaitInventory[GameControl.Control.SelectedBait] -= 1;
+        UiControl.uiControl.BuildBaitInventory();
+        GameControl.Control.Save();
     }
 
     private IEnumerator ActivatePullDirection()
@@ -483,6 +516,7 @@ public class PlayerController : MonoBehaviour
         StopCoroutine("ActivatePullDirection");
         TensionHpBar.SetActive(false);
         LineTension = 0;
-        CurrentFishHp = TotalFishHp; // TODO: This should probably be moved since fish hp will vary
+        FishIsPulling = false;
+        PlayerSprite.sprite = StandingSprites[SpriteAngle];
     }
 }

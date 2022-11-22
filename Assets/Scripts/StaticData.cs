@@ -35,7 +35,9 @@ public class StaticData : MonoBehaviour
                 weathers = null,
                 seasons = null,
                 hours = null,
-                baits = null
+                baits = null,
+                fishBaseHp = 3000,
+                fishBaseStregnth = 1
             });
             FullFishSpeciesList.Add(new FishSpecies
             {
@@ -47,7 +49,9 @@ public class StaticData : MonoBehaviour
                 weathers = new Dictionary<string, int> { { "clear", 10 } },
                 seasons = new Dictionary<string, int> { { "spring", 0 }, { "summer", 10 } },
                 hours = new Dictionary<int, int> { { 3, 0 }, { 10, 0 }, { 11, 0 }, { 12, 0 }, { 13, 0 }, { 14, 0 }, { 15, 0 } },
-                baits = new Dictionary<string, int> { { "worm", 0 } }
+                baits = new Dictionary<string, int> { { "worm", 0 } },
+                fishBaseHp = 5000,
+                fishBaseStregnth = 1
             });
             FullFishSpeciesList.Add(new FishSpecies
             {
@@ -58,7 +62,9 @@ public class StaticData : MonoBehaviour
                 weathers = new Dictionary<string, int> { { "cloudy", 30 }, { "rainy", 40 }, { "stormy", 60 } },
                 seasons = null,
                 hours = null,
-                baits = new Dictionary<string, int> { { "worm", 0 } }
+                baits = new Dictionary<string, int> { { "worm", 0 } },
+                fishBaseHp = 6000,
+                fishBaseStregnth = 2
             });
             FullFishSpeciesList.Add(new FishSpecies
             {
@@ -69,7 +75,9 @@ public class StaticData : MonoBehaviour
                 weathers = null,
                 seasons = new Dictionary<string, int> { { "spring", 10 }, { "winter", 20 } },
                 hours = new Dictionary<int, int> { { 5, 0 }, { 6, 0 }, { 7, 0 }, { 8, 0 }, { 18, 0 }, { 19, 0 }, { 20, 0 }, { 21, 0 } },
-                baits = new Dictionary<string, int> { { "worm", 0 }, { "grub", 0 } }
+                baits = new Dictionary<string, int> { { "worm", 0 }, { "grub", 0 } },
+                fishBaseHp = 6000,
+                fishBaseStregnth = 2
             });
 
             // BAIT LIST
@@ -96,6 +104,11 @@ public class StaticData : MonoBehaviour
     {
         public string species;
         public Sprite sprite;
+
+        // HP represents how fast the catch bar (green bar above bobber) gets depleted
+        // Strength represents how fast the tension goes up
+        public int fishBaseHp;
+        public int fishBaseStregnth; // Eventually these may be affected by multipliers/weight
 
         // DROP RATE is affected by tiles, weather, hour, and bait
         // FISH WEIGHT is affected by tiles, season, and bait

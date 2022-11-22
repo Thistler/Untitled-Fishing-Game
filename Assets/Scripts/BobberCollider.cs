@@ -7,6 +7,9 @@ public class BobberCollider : MonoBehaviour
 
     [SerializeField] private Sprite waterSprite;
     [SerializeField] private Sprite groundSprite;
+    [SerializeField] private Sprite sunkSprite;
+
+    [SerializeField] private AudioClip SplashingSoundEffect;
 
     private PlayerController PlayerController;
 
@@ -41,5 +44,16 @@ public class BobberCollider : MonoBehaviour
                 PlayerController.StartWaitingForBite(MapManager.StaticMapManager.GetTileType(other.gameObject));
             }
         }
+    }
+
+    public void SinkSprite()
+    {
+        BobberSprite.sprite = sunkSprite;
+        // TODO: Should audio for sinking bobber go here?
+    }
+
+    public void PlaySplashSound()
+    {
+        if (!GetComponent<AudioSource>().isPlaying) GetComponent<AudioSource>().PlayOneShot(SplashingSoundEffect, 0.2F);
     }
 }

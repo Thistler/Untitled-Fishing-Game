@@ -133,10 +133,10 @@ TextureImporter:
         serializedVersion: 2
         x: 123
         y: 0
-        width: 37
+        width: 38
         height: 40
-      alignment: 9
-      pivot: {x: 0.5, y: 0.39795917}
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -156,8 +156,8 @@ TextureImporter:
         y: 8
         width: 61
         height: 32
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 9
+      pivot: {x: 0.50371474, y: 0.42210507}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -165,6 +165,27 @@ TextureImporter:
       bones: []
       spriteID: 2dccb184571292349bdf875ac39d7ce7
       internalID: -971541883
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bobber_3
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 7
+        width: 61
+        height: 23
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5cf68461b8e72e84ea741608d8e59c26
+      internalID: -2140336123
       vertices: []
       indices: 
       edges: []
@@ -184,6 +205,8 @@ TextureImporter:
       Bobber_2: 612003754
       Bobber_1: -971541883
       Bobber_3: -2140336123
+      Bobber_4: 1518884022
+      Bobber_5: 69898509
   spritePackingTag: 
   pSDRemoveMatte: 0
   userData: 
