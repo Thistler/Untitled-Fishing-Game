@@ -182,7 +182,6 @@ public class GameControl : MonoBehaviour
         UiControl.uiControl.UpdateLevelAndXpBar();
     }
 
-    // TODO: Make sure this is called every hour
     // Sets list of fish currently available based on current season, weather, and time of day
     public void SetCurrentFishList()
     {

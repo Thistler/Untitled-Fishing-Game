@@ -185,11 +185,11 @@ public class PlayerController : MonoBehaviour
                     if(Input.GetKeyDown(KeyCode.Mouse0))
                     {
                         TimeToStrike = false;
-                        CurrentFishHp -= 1000; // TODO: Recalculate based on player level
+                        CurrentFishHp -= (1000 + (GameControl.Control.PlayerTalents["StrikeStrength"] * 100)); // TODO: Store this somewhere and recalculate for talent
                         break;
                     }
                     StrikeTimer += Time.deltaTime;
-                    if (StrikeTimer > 2.0f) TimeToStrike = false; // TODO: Recalculate based on player xp
+                    if (StrikeTimer > (float)(2.0f + (float)GameControl.Control.PlayerTalents["StrikeTime"])) TimeToStrike = false; // Store this somewhere and recalculate for talent
                 }
 
                 // Determine if player is holding the button in the right direction
@@ -213,7 +213,7 @@ public class PlayerController : MonoBehaviour
                 if (Input.GetKey(KeyCode.Mouse0))
                 {
                     if (!GetComponent<AudioSource>().isPlaying) GetComponent<AudioSource>().PlayOneShot(ReelingSoundEffect);
-                    CurrentFishHp--; // TODO: Different formula for determining how much the hp decreases
+                    CurrentFishHp -= (1.0f + (float)GameControl.Control.PlayerTalents["ReelSpeed"] / 10); // TODO: Store this somewhere and recalculate for talent
                     if (FishIsPulling)
                     {
                         if (pushingCorrectDirection) LineTension += CurrentHookedFish.fishBaseStregnth * 2;
@@ -251,7 +251,7 @@ public class PlayerController : MonoBehaviour
                 }
 
                 // Handle bars
-                float tensionPercent = LineTension / 1000; // TODO: Should this be a separate value increased by leveling up?
+                float tensionPercent = LineTension / (1000 + (GameControl.Control.PlayerTalents["LineStrength"] * 100)); // TODO: Store this value somewhere and make sure it gets updated for new talents
                 // Keep scale and tension percent separate so bar doesn't overflow and we can save tension percent to calculate line break
                 float tensionScaleX = tensionPercent;
                 if (tensionScaleX > 1) tensionScaleX = 1;
@@ -367,7 +367,7 @@ public class PlayerController : MonoBehaviour
         {
             yield return new WaitForSecondsRealtime(2);
             Debug.Log(i*2 + " seconds have passed");
-            int fishRoll = Random.Range(0, totalDropWeights + 1000); // TODO: This number will be calculated somehow later
+            int fishRoll = Random.Range(0, totalDropWeights + (1000 - (GameControl.Control.PlayerTalents["FishFinder"] * 50))); // TODO: Store this and recalucate for talents
             foreach (KeyValuePair<FishSpecies, int> fish in fishInTile)
             {
                 fishRoll -= fish.Value;

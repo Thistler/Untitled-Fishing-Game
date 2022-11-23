@@ -208,6 +208,7 @@ public class UiControl : MonoBehaviour
         GameControl.Control.PlayerTalentPoints--;
         GameControl.Control.PlayerTalents[argTalent] += 1;
         BuildTalentMenu();
+        UpdateTalentNotification();
         GameControl.Control.Save();
     }
 
@@ -396,7 +397,12 @@ public class UiControl : MonoBehaviour
         float xpPercent = (float)GameControl.Control.PlayerXp / (float)StaticData.Static.LevelXpThresholds[GameControl.Control.PlayerLevel];
         LevelBar.transform.Find("LevelBarFill").transform.localScale = new Vector3(xpPercent, 1);
 
-        if(GameControl.Control.PlayerTalentPoints > 0)
+        UpdateTalentNotification();
+    }
+
+    public void UpdateTalentNotification()
+    {
+        if (GameControl.Control.PlayerTalentPoints > 0)
         {
             LevelBar.transform.Find("NewTalentPanel").gameObject.SetActive(true);
         }

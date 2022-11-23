@@ -10439,6 +10439,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: -83.678955
       objectReference: {fileID: 0}
+    - target: {fileID: 4415110272426165313, guid: b3d61a5e4ae84584684d3b890363cf76, type: 3}
+      propertyPath: m_text
+      value: Too many Rough Fish? Try this
+      objectReference: {fileID: 0}
     - target: {fileID: 4415110272838389677, guid: b3d61a5e4ae84584684d3b890363cf76, type: 3}
       propertyPath: m_SizeDelta.x
       value: 338.64
@@ -10454,6 +10458,10 @@ PrefabInstance:
     - target: {fileID: 4415110272838389677, guid: b3d61a5e4ae84584684d3b890363cf76, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 17.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4415110272838389678, guid: b3d61a5e4ae84584684d3b890363cf76, type: 3}
+      propertyPath: m_text
+      value: Fish Finder
       objectReference: {fileID: 0}
     - target: {fileID: 4415110274116398813, guid: b3d61a5e4ae84584684d3b890363cf76, type: 3}
       propertyPath: m_Name
