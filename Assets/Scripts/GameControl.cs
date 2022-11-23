@@ -122,7 +122,7 @@ public class GameControl : MonoBehaviour
 
             // Inventory
             BaitInventory = data.BaitInventory;
-            SelectedBait = data.SelectedBait ?? "worm"; // TODO: Probably temp
+            SelectedBait = data.SelectedBait;
 
             UnlockedFishDataList = data.UnlockedFishDataList;
         }
@@ -180,6 +180,7 @@ public class GameControl : MonoBehaviour
         UiControl.uiControl.BuildBaitInventory();
         UiControl.uiControl.UpdateWeatherSprite();
         UiControl.uiControl.UpdateLevelAndXpBar();
+        UiControl.uiControl.UpdateBaitSprite();
     }
 
     // Sets list of fish currently available based on current season, weather, and time of day

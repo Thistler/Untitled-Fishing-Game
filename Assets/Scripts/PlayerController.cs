@@ -108,6 +108,7 @@ public class PlayerController : MonoBehaviour
                                         if (!GameControl.Control.BaitInventory.ContainsKey(baitItem.Key)) GameControl.Control.BaitInventory.Add(baitItem.Key, 0);
                                         GameControl.Control.BaitInventory[baitItem.Key] += 1;
                                         UiControl.uiControl.BuildBaitInventory();
+                                        UiControl.uiControl.UpdateBaitSprite();
                                         break;
                                     }
                                 }
@@ -416,6 +417,12 @@ public class PlayerController : MonoBehaviour
 
         // Remove bait and save
         GameControl.Control.BaitInventory[GameControl.Control.SelectedBait] -= 1;
+        if (GameControl.Control.BaitInventory[GameControl.Control.SelectedBait] <= 0)
+        {
+            GameControl.Control.BaitInventory.Remove(GameControl.Control.SelectedBait);
+            GameControl.Control.SelectedBait = null;
+        }
+        // TODO: Might want a util function for removing bait and updating ui eventually
         UiControl.uiControl.BuildBaitInventory();
         GameControl.Control.Save();
     }
@@ -526,5 +533,6 @@ public class PlayerController : MonoBehaviour
         LineTension = 0;
         FishIsPulling = false;
         PlayerSprite.sprite = StandingSprites[SpriteAngle];
+        UiControl.uiControl.UpdateBaitSprite();
     }
 }

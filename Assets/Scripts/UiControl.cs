@@ -22,6 +22,9 @@ public class UiControl : MonoBehaviour
     private Dictionary<string, Sprite> WeatherSpritesDictionary;
     private Dictionary<string, int> WeatherDictionaryParam; // Hack for param typing
 
+    [SerializeField] private Image UiCurrentBaitPanel;
+    [SerializeField] private TextMeshProUGUI CurrentBaitCount;
+
     [SerializeField] private Sprite[] LocationSpritesArray;
     private Dictionary<string, Sprite> LocationSpriteDictionary;
 
@@ -47,6 +50,7 @@ public class UiControl : MonoBehaviour
     [SerializeField] private GameObject FishPanelLocationsPanel;
     [SerializeField] private GameObject FishPanelBaitPanel;
 
+    [SerializeField] private Sprite ErrorSprite;
 
     private GameObject UiImage;
 
@@ -177,7 +181,7 @@ public class UiControl : MonoBehaviour
                 newBaitBtn.transform.Find("Icon").GetComponent<Image>().sprite = StaticData.Static.BaitSpritesDictionary[bait.Key];
                 newBaitBtn.transform.GetComponentInChildren<TextMeshProUGUI>().text = bait.Value.ToString();
                 newBaitBtn.transform.SetParent(baitGrid.transform);
-                newBaitBtn.GetComponent<Button>().onClick.AddListener(delegate () { GameControl.Control.SelectedBait = bait.Key; });
+                newBaitBtn.GetComponent<Button>().onClick.AddListener(delegate () { GameControl.Control.SelectedBait = bait.Key; UpdateBaitSprite(); });
             }
         }
     }
@@ -420,5 +424,18 @@ public class UiControl : MonoBehaviour
     public void UpdateWeatherSprite()
     {
         UiWeatherImage.sprite = WeatherSpritesDictionary[GameControl.Control.CurrentWeather];
+    }
+
+    public void UpdateBaitSprite()
+    {
+        if(GameControl.Control.SelectedBait == null)
+        {
+            UiCurrentBaitPanel.sprite = ErrorSprite;
+        }
+        else
+        {
+            UiCurrentBaitPanel.sprite = StaticData.Static.BaitSpritesDictionary[GameControl.Control.SelectedBait];
+            CurrentBaitCount.text = GameControl.Control.BaitInventory[GameControl.Control.SelectedBait].ToString();
+        }
     }
 }
