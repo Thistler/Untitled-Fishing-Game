@@ -362,7 +362,7 @@ public class UiControl : MonoBehaviour
 
     private IEnumerator WaitToHideMessage()
     {
-        yield return new WaitForSeconds(2.0f);
+        yield return new WaitForSeconds(5.0f);
         MessagePanel.SetActive(false);
     }
 

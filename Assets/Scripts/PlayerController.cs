@@ -104,7 +104,7 @@ public class PlayerController : MonoBehaviour
                                     lootRoll -= baitItem.Value;
                                     if (lootRoll < 0)
                                     {
-                                        Debug.Log("Picked up " + baitItem.Key);
+                                        UiControl.uiControl.DisplayMessage("Picked up " + baitItem.Key, StaticData.Static.BaitSpritesDictionary[baitItem.Key]);
                                         if (!GameControl.Control.BaitInventory.ContainsKey(baitItem.Key)) GameControl.Control.BaitInventory.Add(baitItem.Key, 0);
                                         GameControl.Control.BaitInventory[baitItem.Key] += 1;
                                         UiControl.uiControl.BuildBaitInventory();
@@ -481,7 +481,7 @@ public class PlayerController : MonoBehaviour
 
     private void LandFish()
     {
-        Debug.Log(CurrentHookedFish.species + " is caught");
+        UiControl.uiControl.DisplayMessage("Caught " + CurrentHookedFish.species + "!", CurrentHookedFish.sprite);
         ResetPlayerAndBobber();
 
         // Update fish dex
@@ -523,7 +523,7 @@ public class PlayerController : MonoBehaviour
 
     private void EscapeFish()
     {
-        Debug.Log(CurrentHookedFish.species + " escaped");
+        UiControl.uiControl.DisplayMessage("The line broke and the fish escaped!", null);
         ResetPlayerAndBobber();
         GameControl.Control.Save();
     }
