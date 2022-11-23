@@ -401,7 +401,9 @@ public class PlayerController : MonoBehaviour
         Arrow.SetActive(false);
         BobberHpBar.SetActive(true);
         TensionHpBar.SetActive(true);
-        
+        Vector3 tensionScale = new Vector3(0, TensionHpBarFill.transform.localScale.y, TensionHpBarFill.transform.localScale.z);
+        TensionHpBarFill.transform.localScale = tensionScale;
+
         // Sink bobber
         InstantiatedBobber.GetComponent<AudioSource>().Play(); // TODO: Have this be a function in the bobber so we only have to GetComponent once
         InstantiatedBobber.GetComponent<BobberCollider>().SinkSprite();
@@ -495,7 +497,7 @@ public class PlayerController : MonoBehaviour
             GameControl.Control.UnlockedFishDataList.Add(CurrentHookedFish.species, entry);
         }
 
-        GameControl.Control.PlayerXp += CurrentHookedFish.fishBaseXp;
+        GameControl.Control.AddPlayerXp(CurrentHookedFish.fishBaseXp);
         GameControl.Control.Save();
     }
 

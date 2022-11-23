@@ -13,7 +13,8 @@ public class GameControl : MonoBehaviour
 
     // Saveable data
     // Player Stats
-    public float PlayerXp;
+    public int PlayerLevel;
+    public int PlayerXp;
 
     // Inventory
     public Dictionary<string, int> BaitInventory = new Dictionary<string, int>();
@@ -68,6 +69,7 @@ public class GameControl : MonoBehaviour
         PlayerData data = new PlayerData();
 
         // Player Data
+        data.PlayerLevel = PlayerLevel;
         data.PlayerXp = PlayerXp;
 
         // Inventory
@@ -109,6 +111,7 @@ public class GameControl : MonoBehaviour
             CurrentWeather = data.CurrentWeather ?? "clear";
 
             // Player Stats
+            PlayerLevel = data.PlayerLevel;
             PlayerXp = data.PlayerXp;
 
             // Inventory
@@ -130,6 +133,8 @@ public class GameControl : MonoBehaviour
             TimeOfLastSave = DateTime.Now;
             CurrentSeason = "spring";
             CurrentWeather = "clear";
+            PlayerLevel = 1;
+            PlayerXp = 0;
             Save();
         }
 
@@ -155,6 +160,7 @@ public class GameControl : MonoBehaviour
         // Set up Ui
         UiControl.uiControl.BuildBaitInventory();
         UiControl.uiControl.UpdateWeatherSprite();
+        UiControl.uiControl.UpdateLevelAndXpBar();
     }
 
     // TODO: Make sure this is called every hour
@@ -286,13 +292,27 @@ public class GameControl : MonoBehaviour
             inactiveItems[indexToReactivate].SetActive(true);
         }
     }
+
+    public void AddPlayerXp(int addedXp)
+    {
+        PlayerXp += addedXp;
+        // Level up
+        if(PlayerXp >= StaticData.Static.LevelXpThresholds[GameControl.Control.PlayerLevel])
+        {
+            PlayerXp -= StaticData.Static.LevelXpThresholds[GameControl.Control.PlayerLevel];
+            PlayerLevel++;
+        }
+
+        UiControl.uiControl.UpdateLevelAndXpBar();
+    }
 }
 
 [System.Serializable]
 class PlayerData
 {
     // Player Stats
-    public float PlayerXp;
+    public int PlayerXp;
+    public int PlayerLevel;
 
     // Inventory
     public Dictionary<string, int> BaitInventory = new Dictionary<string, int>();

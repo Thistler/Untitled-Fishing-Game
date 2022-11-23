@@ -9,6 +9,8 @@ public class UiControl : MonoBehaviour
 {
     public static UiControl uiControl;
 
+    [SerializeField] private GameObject LevelBar;
+
     [SerializeField] private Image UiSeasonImage;
     [SerializeField] private Sprite[] SeasonSpritesArray;
     private Dictionary<string, Sprite> SeasonSpriteDictionary;
@@ -346,6 +348,17 @@ public class UiControl : MonoBehaviour
     ////////////////////////////////////
     // Top UI
     ////////////////////////////////////
+    public void UpdateLevelAndXpBar()
+    {
+        LevelBar.transform.Find("LevelText").GetComponent<TextMeshProUGUI>().text = GameControl.Control.PlayerLevel.ToString();
+        LevelBar.transform.Find("LevelBarXpText").GetComponent<TextMeshProUGUI>().text = 
+            GameControl.Control.PlayerXp.ToString() + " / " + StaticData.Static.LevelXpThresholds[GameControl.Control.PlayerLevel].ToString();
+
+        // TODO: Maybe we should store xp as floats so we don't have to do this conversion
+        float xpPercent = (float)GameControl.Control.PlayerXp / (float)StaticData.Static.LevelXpThresholds[GameControl.Control.PlayerLevel];
+        LevelBar.transform.Find("LevelBarFill").transform.localScale = new Vector3(xpPercent, 1);
+    }
+
     public void UpdateSeasonSprite()
     {
         UiSeasonImage.sprite = SeasonSpriteDictionary[GameControl.Control.CurrentSeason];
