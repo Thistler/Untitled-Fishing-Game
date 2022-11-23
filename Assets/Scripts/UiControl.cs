@@ -35,6 +35,8 @@ public class UiControl : MonoBehaviour
 
     [SerializeField] public GameObject TalentPanel;
 
+    [SerializeField] public GameObject MessagePanel;
+
     [SerializeField] public GameObject FishDex;
     [SerializeField] private GameObject FishDexGeneralIcon;
     [SerializeField] private GameObject FishDexHourIcon;
@@ -342,6 +344,28 @@ public class UiControl : MonoBehaviour
         RenderFishDexPanel(FishPanelBaitPanel, argSpecies.baits, StaticData.Static.BaitSpritesDictionary, GameControl.Control.UnlockedFishDataList[argSpecies.species].baits);
     }
 
+    public void DisplayMessage(string argMessage, Sprite argSprite)
+    {
+        StopCoroutine("WaitToHideMessage");
+        MessagePanel.SetActive(true);
+        MessagePanel.GetComponentInChildren<TextMeshProUGUI>().text = argMessage;
+        if(argSprite == null)
+        {
+            MessagePanel.transform.Find("MsgImage").GetComponent<Image>().sprite = ErrorSprite;
+        }
+        else
+        {
+            MessagePanel.transform.Find("MsgImage").GetComponent<Image>().sprite = argSprite;
+        }
+        StartCoroutine("WaitToHideMessage");
+    }
+
+    private IEnumerator WaitToHideMessage()
+    {
+        yield return new WaitForSeconds(2.0f);
+        MessagePanel.SetActive(false);
+    }
+
     ////////////////////////////////////
     // Utils
     ////////////////////////////////////
@@ -431,6 +455,7 @@ public class UiControl : MonoBehaviour
         if(GameControl.Control.SelectedBait == null)
         {
             UiCurrentBaitPanel.sprite = ErrorSprite;
+            CurrentBaitCount.text = "";
         }
         else
         {

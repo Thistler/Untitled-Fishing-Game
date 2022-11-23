@@ -138,33 +138,41 @@ public class PlayerController : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.Mouse0) && !UiControl.uiControl.BaitSwitchPanel.activeInHierarchy &&
                     !UiControl.uiControl.FishDex.activeInHierarchy && !UiControl.uiControl.TalentPanel.activeInHierarchy)
                 {
-                    GetComponent<AudioSource>().PlayOneShot(CastingSoundEffect, 0.7F);
-
-                    // Begin our cast
-                    PlayerState = 1;
-
-                    // Get our direction
-                    if (SpriteAngle == 0)
+                    if(GameControl.Control.SelectedBait != null)
                     {
-                        BobberStartPoint.eulerAngles = new Vector3(0f, 180f, 0f);
-                    }
-                    else if (SpriteAngle == 1)
-                    {
-                        BobberStartPoint.eulerAngles = new Vector3(0f, 0f, 0f);
-                    }
-                    else if (SpriteAngle == 2 && PlayerSprite.flipX)
-                    {
-                        BobberStartPoint.eulerAngles = new Vector3(0f, 270f, 0f);
-                    }
-                    else if (SpriteAngle == 2 && !PlayerSprite.flipX) {
-                        BobberStartPoint.eulerAngles = new Vector3(0f, 90f, 0f);
-                    }
+                        GetComponent<AudioSource>().PlayOneShot(CastingSoundEffect, 0.7F);
 
-                    InstantiatedBobber = GameObject.Instantiate(BobberPrefab, BobberStartPoint.position, new Quaternion(0f, 0f, 0f, 0f));
-                    InstantiatedBobber.GetComponent<Rigidbody>().AddForce(BobberStartPoint.forward * 100f);
-                    BobberHpBar = InstantiatedBobber.transform.Find("HpBar").gameObject;
-                    BobberHpBarFill = BobberHpBar.transform.Find("HpBarFill").gameObject;
-                    PlayerSprite.sprite = FishingSprites[SpriteAngle];
+                        // Begin our cast
+                        PlayerState = 1;
+
+                        // Get our direction
+                        if (SpriteAngle == 0)
+                        {
+                            BobberStartPoint.eulerAngles = new Vector3(0f, 180f, 0f);
+                        }
+                        else if (SpriteAngle == 1)
+                        {
+                            BobberStartPoint.eulerAngles = new Vector3(0f, 0f, 0f);
+                        }
+                        else if (SpriteAngle == 2 && PlayerSprite.flipX)
+                        {
+                            BobberStartPoint.eulerAngles = new Vector3(0f, 270f, 0f);
+                        }
+                        else if (SpriteAngle == 2 && !PlayerSprite.flipX)
+                        {
+                            BobberStartPoint.eulerAngles = new Vector3(0f, 90f, 0f);
+                        }
+
+                        InstantiatedBobber = GameObject.Instantiate(BobberPrefab, BobberStartPoint.position, new Quaternion(0f, 0f, 0f, 0f));
+                        InstantiatedBobber.GetComponent<Rigidbody>().AddForce(BobberStartPoint.forward * 100f);
+                        BobberHpBar = InstantiatedBobber.transform.Find("HpBar").gameObject;
+                        BobberHpBarFill = BobberHpBar.transform.Find("HpBarFill").gameObject;
+                        PlayerSprite.sprite = FishingSprites[SpriteAngle];
+                    }
+                    else
+                    {
+                        UiControl.uiControl.DisplayMessage("You cannot fish without bait!", null);
+                    }
                 }
                 break;
             
