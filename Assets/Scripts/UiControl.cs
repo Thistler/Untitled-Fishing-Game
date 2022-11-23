@@ -30,6 +30,8 @@ public class UiControl : MonoBehaviour
     [SerializeField] public GameObject BaitSwitchPanel;
     [SerializeField] private GameObject BaitItem;
 
+    [SerializeField] public GameObject TalentPanel;
+
     [SerializeField] public GameObject FishDex;
     [SerializeField] private GameObject FishDexGeneralIcon;
     [SerializeField] private GameObject FishDexHourIcon;
@@ -130,7 +132,8 @@ public class UiControl : MonoBehaviour
             GameControl.Control.SetCurrentFishList();
         }
 
-        if(Input.GetKey(KeyCode.Tab) && !FishDex.activeInHierarchy)
+        // TODO: Should probably have a more robust system for determining if another menu is open
+        if(Input.GetKey(KeyCode.Tab) && !FishDex.activeInHierarchy && !TalentPanel.activeInHierarchy)
         {
             BaitSwitchPanel.gameObject.SetActive(true);
         }
@@ -139,10 +142,16 @@ public class UiControl : MonoBehaviour
             BaitSwitchPanel.gameObject.SetActive(false);
         }
 
-        if(Input.GetKeyDown(KeyCode.J) && !BaitSwitchPanel.activeInHierarchy)
+        if(Input.GetKeyDown(KeyCode.J) && !BaitSwitchPanel.activeInHierarchy && !TalentPanel.activeInHierarchy)
         {
-            BuildFishDex();
+            BuildFishDex(); // TODO: Might not be necessary if this is getting done elsewhere
             FishDex.SetActive(!FishDex.activeInHierarchy);
+        }
+
+        if(Input.GetKeyDown(KeyCode.Escape) && !BaitSwitchPanel.activeInHierarchy && !FishDex.activeInHierarchy)
+        {
+            BuildTalentMenu(); // TODO: Might not be necessary if this is getting done elsewhere
+            TalentPanel.SetActive(!TalentPanel.activeInHierarchy);
         }
     }
 
@@ -171,6 +180,35 @@ public class UiControl : MonoBehaviour
                 newBaitBtn.GetComponent<Button>().onClick.AddListener(delegate () { GameControl.Control.SelectedBait = bait.Key; });
             }
         }
+    }
+
+    public void BuildTalentMenu()
+    {
+        TalentPanel.transform.Find("TalentPointsText").GetComponent<TextMeshProUGUI>().text = "+" + GameControl.Control.PlayerTalentPoints.ToString();
+
+        GridLayoutGroup talentGrid = TalentPanel.GetComponentInChildren<GridLayoutGroup>();
+        foreach(KeyValuePair<string, int> talent in GameControl.Control.PlayerTalents)
+        {
+            Transform talentPanel = talentGrid.transform.Find(talent.Key).transform;
+            talentPanel.Find("Level").GetComponent<TextMeshProUGUI>().text = talent.Value.ToString();
+            if(GameControl.Control.PlayerTalentPoints > 0)
+            {
+                talentPanel.Find("AddTalentBtn").gameObject.SetActive(true);
+                talentPanel.Find("AddTalentBtn").GetComponent<Button>().onClick.AddListener(delegate () { AddTalent(talent.Key); });
+            }
+            else
+            {
+                talentPanel.Find("AddTalentBtn").gameObject.SetActive(false);
+            }
+        }
+    }
+
+    private void AddTalent(string argTalent)
+    {
+        GameControl.Control.PlayerTalentPoints--;
+        GameControl.Control.PlayerTalents[argTalent] += 1;
+        BuildTalentMenu();
+        GameControl.Control.Save();
     }
 
     public void BuildFishDex()
@@ -357,6 +395,15 @@ public class UiControl : MonoBehaviour
         // TODO: Maybe we should store xp as floats so we don't have to do this conversion
         float xpPercent = (float)GameControl.Control.PlayerXp / (float)StaticData.Static.LevelXpThresholds[GameControl.Control.PlayerLevel];
         LevelBar.transform.Find("LevelBarFill").transform.localScale = new Vector3(xpPercent, 1);
+
+        if(GameControl.Control.PlayerTalentPoints > 0)
+        {
+            LevelBar.transform.Find("NewTalentPanel").gameObject.SetActive(true);
+        }
+        else
+        {
+            LevelBar.transform.Find("NewTalentPanel").gameObject.SetActive(false);
+        }
     }
 
     public void UpdateSeasonSprite()

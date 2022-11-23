@@ -127,10 +127,15 @@ public class PlayerController : MonoBehaviour
                 }
 
                 // Walk
-                MovePlayer();
+                // TODO: Better system for seeing if we can move
+                if(!UiControl.uiControl.FishDex.activeInHierarchy && !UiControl.uiControl.TalentPanel.activeInHierarchy)
+                {
+                    MovePlayer();
+                }
 
                 // Click mouse to cast
-                if (Input.GetKeyDown(KeyCode.Mouse0) && !UiControl.uiControl.BaitSwitchPanel.activeInHierarchy && !UiControl.uiControl.FishDex.activeInHierarchy)
+                if (Input.GetKeyDown(KeyCode.Mouse0) && !UiControl.uiControl.BaitSwitchPanel.activeInHierarchy &&
+                    !UiControl.uiControl.FishDex.activeInHierarchy && !UiControl.uiControl.TalentPanel.activeInHierarchy)
                 {
                     GetComponent<AudioSource>().PlayOneShot(CastingSoundEffect, 0.7F);
 

@@ -45,7 +45,7 @@ public class StaticData : MonoBehaviour
                 baits = null,
                 fishBaseHp = 3000,
                 fishBaseStregnth = 1,
-                fishBaseXp = 1
+                fishBaseXp = 5 // TODO: TEmp
             });
             FullFishSpeciesList.Add(new FishSpecies
             {

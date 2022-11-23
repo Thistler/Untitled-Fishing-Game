@@ -15,6 +15,8 @@ public class GameControl : MonoBehaviour
     // Player Stats
     public int PlayerLevel;
     public int PlayerXp;
+    public int PlayerTalentPoints;
+    public Dictionary<string, int> PlayerTalents = new Dictionary<string, int>();
 
     // Inventory
     public Dictionary<string, int> BaitInventory = new Dictionary<string, int>();
@@ -71,6 +73,8 @@ public class GameControl : MonoBehaviour
         // Player Data
         data.PlayerLevel = PlayerLevel;
         data.PlayerXp = PlayerXp;
+        data.PlayerTalentPoints = PlayerTalentPoints;
+        data.PlayerTalents = PlayerTalents;
 
         // Inventory
         data.BaitInventory = BaitInventory;
@@ -113,6 +117,8 @@ public class GameControl : MonoBehaviour
             // Player Stats
             PlayerLevel = data.PlayerLevel;
             PlayerXp = data.PlayerXp;
+            PlayerTalentPoints = data.PlayerTalentPoints;
+            PlayerTalents = data.PlayerTalents;
 
             // Inventory
             BaitInventory = data.BaitInventory;
@@ -129,12 +135,25 @@ public class GameControl : MonoBehaviour
             DateTime currentDate = DateTime.Now;
             TimeOfFirstSave = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day, 0, 0, 0);
 
-            // Set default variables and create the save file
+            // Set default variables
             TimeOfLastSave = DateTime.Now;
             CurrentSeason = "spring";
             CurrentWeather = "clear";
+
+            // Player stuff
             PlayerLevel = 1;
             PlayerXp = 0;
+            PlayerTalentPoints = 0;
+            PlayerTalents = new Dictionary<string, int>()
+            {
+                { "StrikeStrength", 0 },
+                { "StrikeTime", 0 },
+                { "LineStrength", 0 },
+                { "FishFinder", 0 },
+                { "ReelSpeed", 0 }
+            };
+
+            // Create save file
             Save();
         }
 
@@ -301,6 +320,7 @@ public class GameControl : MonoBehaviour
         {
             PlayerXp -= StaticData.Static.LevelXpThresholds[GameControl.Control.PlayerLevel];
             PlayerLevel++;
+            PlayerTalentPoints++;
         }
 
         UiControl.uiControl.UpdateLevelAndXpBar();
@@ -313,6 +333,9 @@ class PlayerData
     // Player Stats
     public int PlayerXp;
     public int PlayerLevel;
+
+    public int PlayerTalentPoints;
+    public Dictionary<string, int> PlayerTalents = new Dictionary<string, int>();
 
     // Inventory
     public Dictionary<string, int> BaitInventory = new Dictionary<string, int>();
