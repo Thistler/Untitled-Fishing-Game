@@ -38,22 +38,24 @@ public class StaticData : MonoBehaviour
             {
                 species = "Rough Fish",
                 sprite = FishSpritesArray[3], // TODO: This should be 0 eventually
-                tiles = new List<FishTileData> { new FishTileData { tilename = "nothing", droprate = 0, weightbonus = 0 } },
+                tiles = new List<FishTileData> {
+                    new FishTileData{ tilename = "pond_shallow", droprate = 0, weightbonus = 0 },
+                    new FishTileData{ tilename = "pond_deep", droprate = 0, weightbonus = 0 } },
                 weathers = null,
                 seasons = null,
                 hours = null,
-                baits = null,
+                baits = new Dictionary<string, int> { { "worm", 0 }, { "grub", 0 } },
                 fishBaseHp = 3000,
                 fishBaseStregnth = 1,
-                fishBaseXp = 5 // TODO: TEmp
+                fishBaseXp = 5 // TODO: TEmp, should be 1
             });
             FullFishSpeciesList.Add(new FishSpecies
             {
                 species = "Aqua Bass",
                 sprite = FishSpritesArray[1],
                 tiles = new List<FishTileData> {
-                    new FishTileData{ tilename = "cabin_pond_shallow", droprate = 10, weightbonus = 0 },
-                    new FishTileData{ tilename = "cabin_pond_deep", droprate = 80, weightbonus = 10 } },
+                    new FishTileData{ tilename = "pond_shallow", droprate = 10, weightbonus = 0 },
+                    new FishTileData{ tilename = "pond_deep", droprate = 80, weightbonus = 10 } },
                 weathers = new Dictionary<string, int> { { "clear", 10 } },
                 seasons = new Dictionary<string, int> { { "spring", 0 }, { "summer", 10 } },
                 hours = new Dictionary<int, int> { { 3, 0 }, { 10, 0 }, { 11, 0 }, { 12, 0 }, { 13, 0 }, { 14, 0 }, { 15, 0 } },
@@ -65,15 +67,15 @@ public class StaticData : MonoBehaviour
             FullFishSpeciesList.Add(new FishSpecies
             {
                 species = "Cloud Trout",
-                sprite = FishSpritesArray[2],
+                sprite = FishSpritesArray[0],  // TODO: This should be 3 eventually
                 tiles = new List<FishTileData> {
-                    new FishTileData{ tilename = "cabin_pond_shallow", droprate = 20, weightbonus = 0 } },
+                    new FishTileData{ tilename = "pond_shallow", droprate = 20, weightbonus = 0 } },
                 weathers = new Dictionary<string, int> { { "cloudy", 30 }, { "rainy", 40 }, { "stormy", 60 } },
                 seasons = null,
                 hours = null,
                 baits = new Dictionary<string, int> { { "worm", 0 } },
                 fishBaseHp = 6000,
-                fishBaseStregnth = 2,
+                fishBaseStregnth = 4,
                 fishBaseXp = 5
             });
             FullFishSpeciesList.Add(new FishSpecies
@@ -81,7 +83,7 @@ public class StaticData : MonoBehaviour
                 species = "Mud Crawdad",
                 sprite = FishSpritesArray[2],
                 tiles = new List<FishTileData> {
-                    new FishTileData{ tilename = "cabin_pond_shallow", droprate = 40, weightbonus = 0 } },
+                    new FishTileData{ tilename = "pond_shallow", droprate = 40, weightbonus = 0 } },
                 weathers = null,
                 seasons = new Dictionary<string, int> { { "spring", 10 }, { "winter", 20 } },
                 hours = new Dictionary<int, int> { { 5, 0 }, { 6, 0 }, { 7, 0 }, { 8, 0 }, { 18, 0 }, { 19, 0 }, { 20, 0 }, { 21, 0 } },

@@ -104,8 +104,8 @@ public class UiControl : MonoBehaviour
 
             LocationSpriteDictionary = new Dictionary<string, Sprite>()
             {
-                { "cabin_pond_shallow", LocationSpritesArray[0] },
-                { "cabin_pond_deep", LocationSpritesArray[1] }
+                { "pond_shallow", LocationSpritesArray[0] },
+                { "pond_deep", LocationSpritesArray[1] }
             };
         }
         else if (uiControl != this)
@@ -224,35 +224,10 @@ public class UiControl : MonoBehaviour
         //RenderFishPanelWithSelectedFish(StaticData.Static.FullFishSpeciesList[0]);  // TODO: Remove this for now, may replace it with rough fish later
     }
 
-    // TODO Fish for each level should probably be calculated at the beginning of the game, or maybe just hardcoded
     public void PopulateFishListForLevel()
     {
-        // TODO: Temp
-        string[] currentLevelTiles = { "cabin_pond_shallow", "cabin_pond_deep" };
-        /////
-
-        List<StaticData.FishSpecies> fishInLevel = new List<StaticData.FishSpecies>();
-        
-        // TODO: Redo how we find the fish in a given level, we shouldn't be recalculating it constantly
-        foreach(StaticData.FishSpecies species in StaticData.Static.FullFishSpeciesList)
-        {
-            // TODO: Should probably call this at the beginning of the game so it's not recalculated multiple times
-            List<string> tilesFishIsIn = new List<string>();
-            foreach(StaticData.FishTileData tile in species.tiles)
-            {
-                tilesFishIsIn.Add(tile.tilename);
-            }
-            /////////
-            foreach(string currentTile in currentLevelTiles)
-            {
-                foreach(string fishTile in tilesFishIsIn)
-                {
-                    if (currentTile == fishTile && !fishInLevel.Contains(species)) fishInLevel.Add(species);
-                }
-            }
-        }
-        /////
-
+        // TODO: Eventually we will have different levels with different fish, but we don't have that kind of time right now
+        List<StaticData.FishSpecies> fishInLevel = StaticData.Static.FullFishSpeciesList;
 
         ClearGridGroupChildren(FishList);
         int fishIconCount = 0;
@@ -282,15 +257,22 @@ public class UiControl : MonoBehaviour
         FishPanelName.GetComponent<TextMeshProUGUI>().text = argSpecies.species;
 
         // Hours
+        // Check if we have all available hours discovered for the fish
+        bool displayFullHoursList = false;
+        int speciesHoursCount = 24;
+        if (argSpecies.hours != null) speciesHoursCount = argSpecies.hours.Count;
+
         ClearGridGroupChildren(FishPanelHoursPanel);
         for (int i = 0; i < 24; i++)
         {
-            // Check if we have all available hours discovered for the fish
-            bool displayFullHoursList = false;
-            if (GameControl.Control.UnlockedFishDataList[argSpecies.species] != null && GameControl.Control.UnlockedFishDataList[argSpecies.species].hours.Count == argSpecies.hours.Count)
+            if (GameControl.Control.UnlockedFishDataList[argSpecies.species] != null && GameControl.Control.UnlockedFishDataList[argSpecies.species].hours.Count == speciesHoursCount)
             {
                 displayFullHoursList = true;
                 FishPanelHoursPanel.GetComponent<Image>().color = Color.yellow;
+            }
+            else
+            {
+                FishPanelHoursPanel.GetComponent<Image>().color = Color.grey;
             }
             // If all hours are discovered OR current hour is discovered, display that data
             if(displayFullHoursList || GameControl.Control.UnlockedFishDataList[argSpecies.species].hours.Contains(i))
@@ -385,6 +367,7 @@ public class UiControl : MonoBehaviour
         if(argFishDiscoveryList.Count < argFishField.Count)
         {
             AddIconToGrid(FishDexGeneralIcon, argGridPanel, QuestionmarkSprite);
+            argGridPanel.GetComponent<Image>().color = Color.grey;
         }
         else
         {

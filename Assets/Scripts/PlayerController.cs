@@ -25,6 +25,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Sprite[] PullingSprites;
     private int SpriteAngle;
 
+    [SerializeField] private GameObject ReactionSpite;
+
     [SerializeField] private Transform BobberStartPoint;
     [SerializeField] private GameObject BobberPrefab;
 
@@ -39,6 +41,7 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private AudioClip CastingSoundEffect;
     [SerializeField] private AudioClip ReelingSoundEffect;
+    [SerializeField] private AudioClip StrikeSoundEffect;
 
     private FishSpecies CurrentHookedFish;
     private string CurrentFishingTile;
@@ -194,11 +197,17 @@ public class PlayerController : MonoBehaviour
                     if(Input.GetKeyDown(KeyCode.Mouse0))
                     {
                         TimeToStrike = false;
+                        ReactionSpite.SetActive(false);
+                        GetComponent<AudioSource>().PlayOneShot(StrikeSoundEffect);
                         CurrentFishHp -= (1000 + (GameControl.Control.PlayerTalents["StrikeStrength"] * 100)); // TODO: Store this somewhere and recalculate for talent
                         break;
                     }
                     StrikeTimer += Time.deltaTime;
-                    if (StrikeTimer > (float)(2.0f + (float)GameControl.Control.PlayerTalents["StrikeTime"])) TimeToStrike = false; // Store this somewhere and recalculate for talent
+                    if (StrikeTimer > (float)(2.0f + (float)GameControl.Control.PlayerTalents["StrikeTime"])) // Store this somewhere and recalculate for talent
+                    {
+                        TimeToStrike = false;
+                        ReactionSpite.gameObject.SetActive(false);
+                    }
                 }
 
                 // Determine if player is holding the button in the right direction
@@ -266,9 +275,11 @@ public class PlayerController : MonoBehaviour
                 if (tensionScaleX > 1) tensionScaleX = 1;
                 Vector3 tensionScale = new Vector3(tensionScaleX, TensionHpBarFill.transform.localScale.y, TensionHpBarFill.transform.localScale.z);
                 TensionHpBarFill.transform.localScale = tensionScale;
-                float percent = CurrentFishHp / TotalFishHp;
+                float percent = (float)CurrentFishHp / (float)TotalFishHp; // TODO: Possibly store these as floats
                 Vector3 scale = new Vector3(percent, BobberHpBarFill.transform.localScale.y, BobberHpBarFill.transform.localScale.z);
                 BobberHpBarFill.transform.localScale = scale;
+
+                Debug.Log(percent);
 
                 // Land or escape
                 if (CurrentFishHp <= 0)
@@ -406,6 +417,7 @@ public class PlayerController : MonoBehaviour
         TimeToStrike = true;
         StrikeTimer = 0;
         CurrentFishHp = TotalFishHp = CurrentHookedFish.fishBaseHp;
+        ReactionSpite.SetActive(true);
 
         // Switch coroutines
         StopCoroutine("AwaitFishBite");

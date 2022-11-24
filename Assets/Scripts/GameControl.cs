@@ -139,6 +139,7 @@ public class GameControl : MonoBehaviour
             TimeOfLastSave = DateTime.Now;
             CurrentSeason = "spring";
             CurrentWeather = "clear";
+            SelectedBait = null;
 
             // Player stuff
             PlayerLevel = 1;
