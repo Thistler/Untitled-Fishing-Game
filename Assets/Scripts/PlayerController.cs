@@ -86,10 +86,17 @@ public class PlayerController : MonoBehaviour
                             {
                                 // Get loot table for loot point
                                 Dictionary<string, int> lootTable = new Dictionary<string, int>();
+                                Debug.Log(closest.name);
                                 switch (closest.name)
-                                {
-                                    case "WormDirt":
-                                        lootTable = StaticData.Static.WormDirtDropTable;
+                                {   // TODO: This could probably be a dict rather than a switch statement
+                                    case "CabinDirt":
+                                        lootTable = StaticData.Static.CabinDirtDropTable;
+                                        break;
+                                    case "CabinLeaves":
+                                        lootTable = StaticData.Static.CabinLeavesDropTable;
+                                        break;
+                                    case "CabinPebble":
+                                        lootTable = StaticData.Static.CabinPebbleDropTable;
                                         break;
                                 }
                                 
@@ -203,7 +210,7 @@ public class PlayerController : MonoBehaviour
                         break;
                     }
                     StrikeTimer += Time.deltaTime;
-                    if (StrikeTimer > (float)(2.0f + (float)GameControl.Control.PlayerTalents["StrikeTime"])) // Store this somewhere and recalculate for talent
+                    if (StrikeTimer > (float)(1.0f + (float)GameControl.Control.PlayerTalents["StrikeTime"])) // Store this somewhere and recalculate for talent
                     {
                         TimeToStrike = false;
                         ReactionSpite.gameObject.SetActive(false);
@@ -234,17 +241,17 @@ public class PlayerController : MonoBehaviour
                     CurrentFishHp -= (1.0f + (float)GameControl.Control.PlayerTalents["ReelSpeed"] / 10); // TODO: Store this somewhere and recalculate for talent
                     if (FishIsPulling)
                     {
-                        if (pushingCorrectDirection) LineTension += CurrentHookedFish.fishBaseStregnth * 2;
-                        else LineTension += CurrentHookedFish.fishBaseStregnth * 3;
+                        if (pushingCorrectDirection) LineTension += CurrentHookedFish.fishBaseStrength * 2;
+                        else LineTension += CurrentHookedFish.fishBaseStrength * 3;
                     }
-                    else LineTension += CurrentHookedFish.fishBaseStregnth;
+                    else LineTension += CurrentHookedFish.fishBaseStrength;
                 }
                 else
                 {
                     if (FishIsPulling)
                     {
                         if (pushingCorrectDirection) LineTension--;
-                        else LineTension += CurrentHookedFish.fishBaseStregnth;
+                        else LineTension += CurrentHookedFish.fishBaseStrength;
                     }
                     else
                     {

@@ -107,13 +107,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: BaitSprites_0
+      name: BaitSprites_4
       rect:
         serializedVersion: 2
-        x: 10
-        y: 0
-        width: 35
-        height: 49
+        x: 3
+        y: 24
+        width: 88
+        height: 71
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,13 +128,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BaitSprites_1
+      name: BaitSprites_0
       rect:
         serializedVersion: 2
-        x: 57
-        y: 7
-        width: 35
-        height: 39
+        x: 18
+        y: 200
+        width: 70
+        height: 98
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -142,8 +142,92 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b6e718e76a906ae42accb1aae6e8884a
+      spriteID: 18d22106cddc2454eb38f8f339795536
+      internalID: 46449748
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BaitSprites_1
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 215
+        width: 69
+        height: 77
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8ca001c4d578bf445bb2340a1f503afe
       internalID: -720860347
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BaitSprites_2
+      rect:
+        serializedVersion: 2
+        x: 4
+        y: 106
+        width: 84
+        height: 84
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bc627988c5c74ad40ad12a8622aae37b
+      internalID: 842846921
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BaitSprites_3
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 121
+        width: 74
+        height: 71
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2c530d7d55064a04d8035104bddf3a4b
+      internalID: -1020003539
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BaitSprites_5
+      rect:
+        serializedVersion: 2
+        x: 109
+        y: 12
+        width: 91
+        height: 80
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0a5a630709791aa4ba9c6d1dff27a34d
+      internalID: 1297801952
       vertices: []
       indices: 
       edges: []
@@ -159,8 +243,12 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
+      BaitSprites_3: -1020003539
+      BaitSprites_4: 208268161
+      BaitSprites_2: 842846921
+      BaitSprites_5: 1297801952
       BaitSprites_1: -720860347
-      BaitSprites_0: 208268161
+      BaitSprites_0: 46449748
   spritePackingTag: 
   pSDRemoveMatte: 0
   userData: 

@@ -250,8 +250,8 @@ public class GameControl : MonoBehaviour
         switch (CurrentWeather)
         {
             case "clear":
-                //  Can stay the same, or switch to either cloudy or foggy, depending on season
-                availableWeather = new List<string>() { "clear", "rainy", "foggy" };
+                //  Can stay the same, or switch to cloudy, depending on season
+                availableWeather = new List<string>() { "clear", "rainy" };
                 break;
             case "cloudy":
                 //  Can stay the same, or switch to clear, rainy or snowy, depending on the season
@@ -260,12 +260,12 @@ public class GameControl : MonoBehaviour
                 else availableWeather.Add("rainy");
                 break;
             case "rainy":
-                //  Can stay the same, or switch to foggy or cloudy, depending on the season
-                availableWeather = new List<string>() { "rainy", "cloudy", "foggy" };
+                //  Can stay the same, or switch to cloudy, depending on the season
+                availableWeather = new List<string>() { "rainy", "cloudy" };
                 break;
             case "snowy":
-                // Can stay the same, or switch to rainy, cloudy or foggy, depending on the season
-                availableWeather = new List<string>() { "cloudy", "foggy" };
+                // Can stay the same, or switch to rainy, cloudy, depending on the season
+                availableWeather = new List<string>() { "cloudy" };
                 if (CurrentWeather == "winter") availableWeather.Add("snowy");
                 else availableWeather.Add("rainy");
                 break;
@@ -275,7 +275,7 @@ public class GameControl : MonoBehaviour
                 break;
             case "foggy":
                 // Can stay the same or switch to clear, cloudy, or rainy
-                availableWeather = new List<string>() { "cloudy", "foggy" };
+                availableWeather = new List<string>() { "cloudy" };
                 if (CurrentWeather == "winter") availableWeather.Add("snowy");
                 else availableWeather.Add("rainy");
                 break;

@@ -111,11 +111,11 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 18
+        y: 219
         width: 100
         height: 37
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -132,11 +132,11 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 101
-        y: 18
+        y: 219
         width: 99
         height: 37
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -144,6 +144,90 @@ TextureImporter:
       bones: []
       spriteID: af0f611acb1ab3547a553ec20d3cdfcf
       internalID: 901414797
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TerrainObjects_2
+      rect:
+        serializedVersion: 2
+        x: 4
+        y: 119
+        width: 87
+        height: 59
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bb5a31504e8111648a9dc6d3abd0f06d
+      internalID: 634912561
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TerrainObjects_3
+      rect:
+        serializedVersion: 2
+        x: 104
+        y: 119
+        width: 87
+        height: 59
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d88993c07a9465545bdbd3a2d603a45c
+      internalID: 1053739466
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TerrainObjects_4
+      rect:
+        serializedVersion: 2
+        x: 7
+        y: 29
+        width: 82
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d9c0531b3fbe5fe4e84c81d602cf7ecf
+      internalID: -1783639236
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TerrainObjects_5
+      rect:
+        serializedVersion: 2
+        x: 107
+        y: 29
+        width: 82
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5b4b70f400034ab4e8a41e002fcc23fd
+      internalID: -750469083
       vertices: []
       indices: 
       edges: []
@@ -159,8 +243,12 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
+      TerrainObjects_2: 634912561
       TerrainObjects_0: -556508003
       TerrainObjects_1: 901414797
+      TerrainObjects_4: -1783639236
+      TerrainObjects_5: -750469083
+      TerrainObjects_3: 1053739466
   spritePackingTag: 
   pSDRemoveMatte: 0
   userData: 

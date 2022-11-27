@@ -105,7 +105,11 @@ public class UiControl : MonoBehaviour
             LocationSpriteDictionary = new Dictionary<string, Sprite>()
             {
                 { "pond_shallow", LocationSpritesArray[0] },
-                { "pond_deep", LocationSpritesArray[1] }
+                { "pond_deep", LocationSpritesArray[1] },
+                { "algae", LocationSpritesArray[2] },
+                { "creek", LocationSpritesArray[3] },
+                { "waterfall_pond", LocationSpritesArray[4] },
+                { "reeds", LocationSpritesArray[5] }
             };
         }
         else if (uiControl != this)
