@@ -238,7 +238,7 @@ public class PlayerController : MonoBehaviour
                 if (Input.GetKey(KeyCode.Mouse0))
                 {
                     if (!GetComponent<AudioSource>().isPlaying) GetComponent<AudioSource>().PlayOneShot(ReelingSoundEffect);
-                    CurrentFishHp -= (1.0f + (float)GameControl.Control.PlayerTalents["ReelSpeed"] / 10); // TODO: Store this somewhere and recalculate for talent
+                    CurrentFishHp -= (1.0f + ((float)GameControl.Control.PlayerTalents["ReelSpeed"] / 10)); // TODO: Store this somewhere and recalculate for talent
                     if (FishIsPulling)
                     {
                         if (pushingCorrectDirection) LineTension += CurrentHookedFish.fishBaseStrength * 2;
@@ -250,12 +250,12 @@ public class PlayerController : MonoBehaviour
                 {
                     if (FishIsPulling)
                     {
-                        if (pushingCorrectDirection) LineTension--;
+                        if (pushingCorrectDirection) LineTension -= 5;
                         else LineTension += CurrentHookedFish.fishBaseStrength;
                     }
                     else
                     {
-                        LineTension--;
+                        LineTension -= 5;
                     }
                 }
 

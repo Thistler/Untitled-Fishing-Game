@@ -56,7 +56,7 @@ public class StaticData : MonoBehaviour
                 seasons = null,
                 hours = null,
                 baits = new Dictionary<string, int> { { "worm", 0 }, { "grub", 0 }, { "crawler", 0 }, { "pillbug", 0 }, { "grasshopper", 0 }, { "locust", 0 } },
-                fishBaseHp = 3000,
+                fishBaseHp = 2000,
                 fishBaseStrength = 1,
                 fishBaseXp = 1
             });
@@ -98,7 +98,6 @@ public class StaticData : MonoBehaviour
                 species = "Cloud Trout",
                 sprite = FishSpritesArray[3],
                 tiles = new List<FishTileData> {
-                    new FishTileData{ tilename = "pond_shallow", droprate = 20, weightbonus = 0 },
                     new FishTileData{ tilename = "pond_deep", droprate = 20, weightbonus = 0 }
                 },
                 weathers = new Dictionary<string, int> { { "cloudy", 30 }, { "rainy", 40 }, { "stormy", 60 } },
@@ -115,7 +114,6 @@ public class StaticData : MonoBehaviour
                 sprite = FishSpritesArray[4],
                 tiles = new List<FishTileData> {
                     new FishTileData{ tilename = "algae", droprate = 40, weightbonus = 0 },
-                    new FishTileData{ tilename = "pond_shallow", droprate = 40, weightbonus = 0 },
                     new FishTileData{ tilename = "pond_deep", droprate = 20, weightbonus = 0 },
                     new FishTileData{ tilename = "reeds", droprate = 40, weightbonus = 0 }
                 },
@@ -133,7 +131,6 @@ public class StaticData : MonoBehaviour
                 sprite = FishSpritesArray[5],
                 tiles = new List<FishTileData> {
                     new FishTileData{ tilename = "creek", droprate = 40, weightbonus = 0 },
-                    new FishTileData{ tilename = "pond_shallow", droprate = 40, weightbonus = 0 },
                     new FishTileData{ tilename = "pond_deep", droprate = 20, weightbonus = 0 },
                     new FishTileData{ tilename = "waterfall_pond", droprate = 20, weightbonus = 0 },
                 },
@@ -141,9 +138,9 @@ public class StaticData : MonoBehaviour
                 seasons = new Dictionary<string, int> { { "fall", 30 }, { "winter", 20 } },
                 hours = null,
                 baits = new Dictionary<string, int> { { "crawler", 10 }, { "pillbug", 20 }, { "grasshopper", 10 }, { "locust", 20 } },
-                fishBaseHp = 5000,
-                fishBaseStrength = 3,
-                fishBaseXp = 6
+                fishBaseHp = 2000,
+                fishBaseStrength = 1,
+                fishBaseXp = 3
             });
             FullFishSpeciesList.Add(new FishSpecies
             {
@@ -157,7 +154,7 @@ public class StaticData : MonoBehaviour
                 seasons = new Dictionary<string, int> { { "spring", 30 }, { "winter", 40} },
                 hours = null,
                 baits = new Dictionary<string, int> { { "worm", 10 }, { "grub", 10 }, { "crawler", 10 }, { "pillbug", 20 }, { "grasshopper", 10 }, { "locust", 20 } },
-                fishBaseHp = 5000,
+                fishBaseHp = 3000,
                 fishBaseStrength = 3,
                 fishBaseXp = 6
             });
@@ -173,7 +170,7 @@ public class StaticData : MonoBehaviour
                 seasons = new Dictionary<string, int> { { "summer", 30 }, { "fall", 40 } },
                 hours = null,
                 baits = new Dictionary<string, int> { { "worm", 10 }, { "grub", 10 }, { "crawler", 10 }, { "pillbug", 20 }, { "grasshopper", 10 }, { "locust", 20 } },
-                fishBaseHp = 5000,
+                fishBaseHp = 2000,
                 fishBaseStrength = 3,
                 fishBaseXp = 6
             });
@@ -205,7 +202,7 @@ public class StaticData : MonoBehaviour
                 seasons = null,
                 hours = null,
                 baits = new Dictionary<string, int> { { "grasshopper", 10 }, { "locust", 20 } },
-                fishBaseHp = 5000,
+                fishBaseHp = 2000,
                 fishBaseStrength = 2,
                 fishBaseXp = 4
             });
@@ -216,7 +213,6 @@ public class StaticData : MonoBehaviour
                 tiles = new List<FishTileData> {
                     new FishTileData{ tilename = "algae", droprate = 30, weightbonus = 0 },
                     new FishTileData{ tilename = "creek", droprate = 30, weightbonus = 0 },
-                    new FishTileData{ tilename = "pond_shallow", droprate = 30, weightbonus = 0 },
                     new FishTileData{ tilename = "pond_deep", droprate = 30, weightbonus = 0 },
                     new FishTileData{ tilename = "reeds", droprate = 30, weightbonus = 0 },
                     new FishTileData{ tilename = "waterfall_pond", droprate = 30, weightbonus = 0 }
@@ -225,7 +221,7 @@ public class StaticData : MonoBehaviour
                 seasons = null,
                 hours = null,
                 baits = new Dictionary<string, int> { { "worm", 10 }, { "grub", 10 }, { "crawler", 10 }, { "pillbug", 20 }, { "grasshopper", 10 }, { "locust", 20 } },
-                fishBaseHp = 4000,
+                fishBaseHp = 3000,
                 fishBaseStrength = 2,
                 fishBaseXp = 4
             });
@@ -245,7 +241,7 @@ public class StaticData : MonoBehaviour
                 seasons = null,
                 hours = null,
                 baits = new Dictionary<string, int> { { "worm", 10 }, { "grub", 10 }, { "crawler", 10 }, { "pillbug", 20 }, { "grasshopper", 10 }, { "locust", 20 } },
-                fishBaseHp = 4000,
+                fishBaseHp = 3000,
                 fishBaseStrength = 2,
                 fishBaseXp = 4
             });
@@ -260,7 +256,7 @@ public class StaticData : MonoBehaviour
                 seasons = null,
                 hours = new Dictionary<int, int> { { 5, 0 }, { 6, 0 }, { 7, 0 }, { 8, 0 }, { 9, 0 }, { 10, 0 }, { 11, 0 }, { 12, 0 } },
                 baits = new Dictionary<string, int> { { "worm", 10 } },
-                fishBaseHp = 3000,
+                fishBaseHp = 2000,
                 fishBaseStrength = 1,
                 fishBaseXp = 2
             });
@@ -277,7 +273,7 @@ public class StaticData : MonoBehaviour
                 seasons = null,
                 hours = null,
                 baits = new Dictionary<string, int> { { "worm", 10 }, { "grub", 10 }, { "crawler", 10 }, { "pillbug", 20 } },
-                fishBaseHp = 4000,
+                fishBaseHp = 3000,
                 fishBaseStrength = 1,
                 fishBaseXp = 3
             });
@@ -309,7 +305,7 @@ public class StaticData : MonoBehaviour
                 seasons = null,
                 hours = null,
                 baits = new Dictionary<string, int> { { "pillbug", 20 } },
-                fishBaseHp = 5000,
+                fishBaseHp = 2000,
                 fishBaseStrength = 3,
                 fishBaseXp = 6
             });
@@ -334,7 +330,6 @@ public class StaticData : MonoBehaviour
                 sprite = FishSpritesArray[17],
                 tiles = new List<FishTileData> {
                     new FishTileData{ tilename = "algae", droprate = 30, weightbonus = 0 },
-                    new FishTileData{ tilename = "pond_shallow", droprate = 30, weightbonus = 0 },
                     new FishTileData{ tilename = "pond_deep", droprate = 30, weightbonus = 0 },
                     new FishTileData{ tilename = "reeds", droprate = 30, weightbonus = 0 }
                 },
@@ -342,7 +337,7 @@ public class StaticData : MonoBehaviour
                 seasons = null,
                 hours = null,
                 baits = new Dictionary<string, int> { { "grub", 10 }, { "pillbug", 20 } },
-                fishBaseHp = 4000,
+                fishBaseHp = 3000,
                 fishBaseStrength = 2,
                 fishBaseXp = 3
             });
@@ -358,7 +353,7 @@ public class StaticData : MonoBehaviour
                 seasons = null,
                 hours = null,
                 baits = new Dictionary<string, int> { { "worm", 10 }, { "grub", 10 }, { "crawler", 10 }, { "pillbug", 20 }, { "grasshopper", 10 }, { "locust", 20 } },
-                fishBaseHp = 4000,
+                fishBaseHp = 3000,
                 fishBaseStrength = 2,
                 fishBaseXp = 3
             });
@@ -384,14 +379,13 @@ public class StaticData : MonoBehaviour
                 sprite = FishSpritesArray[20],
                 tiles = new List<FishTileData> {
                     new FishTileData{ tilename = "algae", droprate = 30, weightbonus = 0 },
-                    new FishTileData{ tilename = "pond_shallow", droprate = 30, weightbonus = 0 },
                     new FishTileData{ tilename = "pond_deep", droprate = 30, weightbonus = 0 },
                 },
                 weathers = null,
                 seasons = null,
                 hours = null,
                 baits = new Dictionary<string, int> { { "grub", 10 }, { "pillbug", 20 }, { "locust", 20 } },
-                fishBaseHp = 4000,
+                fishBaseHp = 3000,
                 fishBaseStrength = 2,
                 fishBaseXp = 3
             });
@@ -411,7 +405,7 @@ public class StaticData : MonoBehaviour
                 seasons = null,
                 hours = null,
                 baits = new Dictionary<string, int> { { "worm", 10 }, { "grub", 10 }, { "crawler", 10 }, { "pillbug", 20 }, { "grasshopper", 20 }, { "locust", 20 } },
-                fishBaseHp = 3000,
+                fishBaseHp = 2000,
                 fishBaseStrength = 1,
                 fishBaseXp = 2
             });
@@ -427,7 +421,7 @@ public class StaticData : MonoBehaviour
                 seasons = null,
                 hours = null,
                 baits = new Dictionary<string, int> { { "grub", 10 } },
-                fishBaseHp = 4000,
+                fishBaseHp = 3000,
                 fishBaseStrength = 2,
                 fishBaseXp = 2
             });
@@ -459,7 +453,7 @@ public class StaticData : MonoBehaviour
                 seasons = null,
                 hours = null,
                 baits = new Dictionary<string, int> { { "worm", 10 }, { "grub", 10 }, { "crawler", 10 }, { "pillbug", 20 }, { "grasshopper", 20 }, { "locust", 20 } },
-                fishBaseHp = 4000,
+                fishBaseHp = 3000,
                 fishBaseStrength = 3,
                 fishBaseXp = 3
             });
@@ -479,7 +473,7 @@ public class StaticData : MonoBehaviour
                 seasons = null,
                 hours = null,
                 baits = new Dictionary<string, int> { { "worm", 10 }, { "grub", 10 }, { "crawler", 10 }, { "pillbug", 20 }, { "grasshopper", 20 }, { "locust", 20 } },
-                fishBaseHp = 4000,
+                fishBaseHp = 2000,
                 fishBaseStrength = 2,
                 fishBaseXp = 2
             });
@@ -499,7 +493,7 @@ public class StaticData : MonoBehaviour
                 seasons = null,
                 hours = null,
                 baits = new Dictionary<string, int> { { "worm", 10 }, { "grub", 10 }, { "crawler", 10 }, { "pillbug", 20 }, { "grasshopper", 20 }, { "locust", 20 } },
-                fishBaseHp = 4000,
+                fishBaseHp = 2000,
                 fishBaseStrength = 2,
                 fishBaseXp = 2
             });
@@ -547,7 +541,7 @@ public class StaticData : MonoBehaviour
                 seasons = null,
                 hours = null,
                 baits = new Dictionary<string, int> { { "grub", 10 }, { "locust", 20 } },
-                fishBaseHp = 8000,
+                fishBaseHp = 4000,
                 fishBaseStrength = 6,
                 fishBaseXp = 8
             });
