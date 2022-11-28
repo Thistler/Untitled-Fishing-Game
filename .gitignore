@@ -4,6 +4,10 @@ Logs/
 Temp/
 UserSettings/
 
+# Build
+WebBuild/
+Build/UntitledFishingGame_Download.zip
+
 # VS / Monodevelop Generated
 ExportedObj/
 obj/
