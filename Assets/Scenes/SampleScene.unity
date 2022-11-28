@@ -4599,11 +4599,11 @@ MonoBehaviour:
   UiWeatherImage: {fileID: 472697148}
   WeatherSpritesArray:
   - {fileID: -1363064477, guid: 674e9b3212f92844aa70672cbb4ad1b3, type: 3}
-  - {fileID: 288771169, guid: 674e9b3212f92844aa70672cbb4ad1b3, type: 3}
-  - {fileID: 51708422, guid: 674e9b3212f92844aa70672cbb4ad1b3, type: 3}
-  - {fileID: -838900028, guid: 674e9b3212f92844aa70672cbb4ad1b3, type: 3}
-  - {fileID: -1542592347, guid: 674e9b3212f92844aa70672cbb4ad1b3, type: 3}
   - {fileID: -1459683411, guid: 674e9b3212f92844aa70672cbb4ad1b3, type: 3}
+  - {fileID: -1542592347, guid: 674e9b3212f92844aa70672cbb4ad1b3, type: 3}
+  - {fileID: -838900028, guid: 674e9b3212f92844aa70672cbb4ad1b3, type: 3}
+  - {fileID: 51708422, guid: 674e9b3212f92844aa70672cbb4ad1b3, type: 3}
+  - {fileID: 288771169, guid: 674e9b3212f92844aa70672cbb4ad1b3, type: 3}
   UiCurrentBaitPanel: {fileID: 2088397870}
   CurrentBaitCount: {fileID: 1585936373}
   LocationSpritesArray:
@@ -92962,7 +92962,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.13878584, y: 0}
   m_AnchorMax: {x: 0.86100006, y: 0.88249105}
-  m_AnchoredPosition: {x: 0, y: 0.28825378}
+  m_AnchoredPosition: {x: 0, y: 0.28823853}
   m_SizeDelta: {x: 116, y: 0.57654}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1536587287

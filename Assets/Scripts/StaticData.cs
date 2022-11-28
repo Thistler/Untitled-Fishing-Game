@@ -532,7 +532,7 @@ public class StaticData : MonoBehaviour
             FullFishSpeciesList.Add(new FishSpecies
             {
                 species = "Chompy Bitefish",
-                sprite = FishSpritesArray[28],
+                sprite = FishSpritesArray[29],
                 tiles = new List<FishTileData> {
                     new FishTileData{ tilename = "creek", droprate = 30, weightbonus = 0 },
                     new FishTileData{ tilename = "waterfall_pond", droprate = 30, weightbonus = 0 }
